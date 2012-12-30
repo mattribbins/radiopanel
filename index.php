@@ -33,10 +33,14 @@ $db_config = array(
 	'database'  => $db_name,
 	'password'  => $db_pass	
 );
-// Delete setup.php if for some reason it exists. If this file cannot be deleted, die!
+// Delete setup.php if for some reason it exists. Go to setup if no config. If this file cannot be deleted, die!
 if(file_exists("setup.php")) {
-	if(!unlink("setup.php")) {
-		die("Critical Error: setup.php is still present! You must remove this file before using RadioPanel!");	
+	if(file_exists("config.php")) {
+		if(!unlink("setup.php")) {
+			die("Critical Error: setup.php is still present! You must remove this file before using RadioPanel!");	
+		}
+	} else {
+		header('Location: setup.php');
 	}
 }
 $db_session = new Database($db_config);
