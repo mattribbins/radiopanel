@@ -10,6 +10,18 @@
 error_reporting(0);
 ini_set("display_errors", "0"); 
 
+
+// Delete setup.php if for some reason it exists. Go to setup if no config. If this file cannot be deleted, die!
+if(file_exists("setup.php")) {
+	if(file_exists("config.php")) {
+		if(!unlink("setup.php")) {
+			die("Critical Error: setup.php is still present! You must remove this file before using RadioPanel!");	
+		}
+	} else {
+		header('Location: setup.php');
+	}
+}
+
 // Includes 
 require("config.php");
 require("inc/init.php");
@@ -23,7 +35,7 @@ require("inc/class.stream.php");
 require("inc/class.user.php");
 
 // Defines
-define('_VER', '1.0b1');
+define('_VER', '1.0a2');
 
 // Initialisation
 session_start();
@@ -33,26 +45,17 @@ $db_config = array(
 	'database'  => $db_name,
 	'password'  => $db_pass	
 );
-// Delete setup.php if for some reason it exists. Go to setup if no config. If this file cannot be deleted, die!
-if(file_exists("setup.php")) {
-	if(file_exists("config.php")) {
-		if(!unlink("setup.php")) {
-			die("Critical Error: setup.php is still present! You must remove this file before using RadioPanel!");	
-		}
-	} else {
-		header('Location: setup.php');
-	}
-}
+
 $db_session = new Database($db_config);
 $db_session->connect();
 $user_session = new UserService($db_session);
 $user_session->init();
 
 // Check if we're a web page or using the cli (i.e. for cron)
-if (isset($_SERVER['argv'])) {
-	$page = $_SERVER['argv'][1];
-} else {
+if (isset($_GET['page'])) {
 	$page = $_GET['page'];
+} else {
+	$page = $_SERVER['argv'][1];
 }
 
 // Choose the page determined by ?page=etc
@@ -60,11 +63,8 @@ if (isset($_SERVER['argv'])) {
 if($user_session->isLoggedIn()) {
 	switch($page) {
 		case "logout":
-			display_head("Logging out...", "./");
-			display_header("Logging out...");
-			echo "Logging out...";
 			$user_session->logout();
-			display_footer();
+			header('Location: ./');
 			break;
 		case "live":
 			stream_livestats();
@@ -113,26 +113,15 @@ if($user_session->isLoggedIn()) {
 			display_credits();
 			break;
 		case "login":
-			display_head("Logging in...","./");
-			display_header("Logging in...");
-			echo "Logging in...";
 			$user_session->login();
-			display_footer();
+			header('Location: ./');
 			break;
 		default:
 			display_head("Home");
 			display_header("Home");
-			echo "RadioPanel - Please log in<br />";
 			display_loginbox();
 			display_footer();
 			break;
 	}
 }
-
-
-//$stream = new Stream;
-//$stream->setServer("94.23.121.91:8000", "admin", "01theHUB1449", "/hub-hq.mp3");
-//$stream->getData();
-
-
 ?>

@@ -1,7 +1,7 @@
 RadioPlayer
 ===========
 by Matt Ribbins (mattyribbo.co.uk)
-Current release: 1.0b1
+Current release: 1.0a2
 
 Requirements
 ------------
@@ -17,6 +17,10 @@ RadioPanel is a panel used for recording listener figures and displays them eith
 Installation
 ------------
 Download RadioPanel to your PHP enabled webserver. Run setup.php from your web browser to run the install script and follow the instructions.
+
+Warning
+-------
+RadioPanel is pretty much in it's alpha stages. I don't recommend at this point putting this into production unless you're willing to update regularly or perhaps make SQL adjustments.
  
 Help!
 -----
