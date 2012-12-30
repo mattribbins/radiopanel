@@ -1,0 +1,11 @@
+RadioPanel - Installation instructions
+**************************************
+
+To install RadioPanel:
+1. Extract all files, 
+2. Navigate to setup.php
+3. Follow the step by step instructions
+4. ...
+5. Profit
+
+You could install manually but I highly do not recommend this.
