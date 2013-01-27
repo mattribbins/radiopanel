@@ -1,5 +1,24 @@
 // RadioPanel Scripts
+
 $(document).ready(function(e) {
+	
+	// Week view scripts
+	$('.week-view-sel').buttonset();
+	
+	$("#week-view-sel-peak").click(function () {
+		$('.week-table-avg').fadeOut(100, "swing" , function() {
+			$('.week-table-peak').fadeIn(100);
+		});
+		$('#week-view-sel-avg').next().removeClass('ui-state-active');
+	});
+	$("#week-view-sel-avg").click(function () {
+		$('.week-table-peak').fadeOut(100, "swing" , function() {
+			$('.week-table-avg').fadeIn(100);
+		});
+		$('#week-view-sel-peak').next().removeClass('ui-state-active');
+	});
+	$("#week-view-sel-peak").click();
+	
     var autorefresh = setInterval(function () {
 		$("#streamstats").load("./?page=api&task=html_live_stats").fadeIn("slow");
 	}, 2500);

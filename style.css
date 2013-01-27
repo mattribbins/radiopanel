@@ -95,7 +95,6 @@ nav ul li a:hover {
 }
 
 #content {
-	padding: 10px;
 	min-height: 250px;
 }
 
@@ -252,6 +251,16 @@ hr {
 	margin: 0 auto;
 	width: 310px;	
 }
+.week-view-sel {
+	margin-bottom: 5px;	
+	text-align: right;
+}
+.week-table-peak {
+	display: block;
+}
+.week-table-avg {
+	display: block;
+}
 .table-week > tbody {
 	border: 1px solid #CCC;
 }
@@ -295,4 +304,7 @@ hr {
 .ui-button {
 	font-size: 14px !important;
 	font-weight: 400 !important;	
+}
+.ui-widget {
+	font-family: 'Source Sans Pro', Tahoma, sans-serif;
 }

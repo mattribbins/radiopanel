@@ -2,7 +2,7 @@
 // RadioPanel -  Setup File
 // (C) Matt Ribbins - matt@mattyribbo.co.uk
 //
-// This file must be deleted once completed!
+// This file must be deleted once run (or if manual setup has been completed);
 
 include("inc/class.db.php");
 include("inc/class.user.php");

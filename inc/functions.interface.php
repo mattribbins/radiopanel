@@ -19,11 +19,11 @@ function display_head($title,$redirect="") {
 		echo "<meta http-equiv=\"refresh\" content=\"1;url=$redirect\">"; 
 	}
 	echo "<link rel=\"shortcut icon\" href=\"favicon.ico\" type=\"image/x-icon\" />\n";
-	echo "<link href=\"style.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
 	echo "<link href=\"lib/grid.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
 	echo "<link href=\"lib/jquery-ui-1.9.2.custom.min.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
 	echo "<link href=\"lib/jquery.ui.timepicker.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
 	echo "<link href=\"lib/jquery.jqplot.min.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
+	echo "<link href=\"style.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
 	echo "<title>RadioPanel - $title</title>\n";
 	echo "<script src=\"lib/jquery-1.8.3.min.js\"></script>\n";
 	echo "<script src=\"lib/jquery-ui-1.9.2.custom.min.js\"></script>\n";

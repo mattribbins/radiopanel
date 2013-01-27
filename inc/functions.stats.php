@@ -22,23 +22,39 @@ function stats_week() {
 		$peak_figure = 0;
 		$peak_hour = 0;
 		$peak_day = 0;
-		$top;
+		$top; 
+		$top_peak;
+
+		// Output strings
+		$output_avg = "";
+		$output_peak = "";
 		$graph_string_avg = "";
+		$graph_string_peak = "";
 		for($i = 0; $i < 5; $i++) {
 			$top[$i]['figure'] = 0;
 			$top[$i]['hour'] = 0;
 			$top[$i]['day'] = 0;
 			$top[$i]['more'] = 0;
 		}
-		
-		echo "<h3>Week commencing ".$_GET['date']."</h3>";
+		for($i = 0; $i < 5; $i++) {
+			$top_peak[$i]['figure'] = 0;
+			$top_peak[$i]['hour'] = 0;
+			$top_peak[$i]['day'] = 0;
+			$top_peak[$i]['more'] = 0;
+		}
+		echo "<div class=\"grid_9\">\n<h3>Week commencing ".$_GET['date']."</h3>\n</div>\n<div class=\"grid_3 week-view-sel\">";
+		echo "<input type=\"radio\" id=\"week-view-sel-peak\" name=\"week-view-sel-peak\" /><label for=\"week-view-sel-peak\">Peak</label>";
+		echo "<input type=\"radio\" id=\"week-view-sel-avg\" name=\"week-view-sel-avg\" /><label for=\"week-view-sel-avg\">Average</label>";
+		echo "</div>";
 		// Table of stats (yay)
-		echo "<table class=\"table-week\">\n<thead><tr><td>Hour</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td></tr></thead>\n";
-		echo "<tbody>\n<tr><td>".$days[0]."</td>";
+		$output_avg = "<table class=\"table-week table-week-avg\">\n<thead><tr><td>Hour</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td></tr></thead>\n";
+		$output_peak = "<table class=\"table-week table-week-peak\">\n<thead><tr><td>Hour</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td></tr></thead>\n";
+		$output_avg .= "<tbody>\n<tr><td>".$days[0]."</td>";
+		$output_peak .= "<tbody>\n<tr><td>".$days[0]."</td>";
 		// Big loop to dump the data into a table we're going to generate. Go from start to end of week
 		$time_sel = $time_start;
 		while($time_sel < $time_end) {
-			// Generate query
+			// Generate query (select the day)
 			$time_sel_end = $time_sel + 3600;
 			$result = $db_session->query("SELECT * FROM `figures` WHERE `timestamp`>'$time_sel' AND `timestamp`<'$time_sel_end';");
 			if($result) {
@@ -46,26 +62,37 @@ function stats_week() {
 				$listeners;
 				$plots = 0;
 				$total = 0;
+				$peak = 0;
 				while($temp = mysql_fetch_array($result)) {
 					$time_hour = round(($temp['timestamp'] - $time_sel) / 60);
 					$listeners[$time_hour] = $temp['listeners'];
 					$plots++;
 					$total += $listeners[$time_hour];
+					if($listeners[$time_hour] > $peak) {
+						$peak = $listeners[$time_hour];
+					}
 					if($listeners[$time_hour] > $peak_figure) {
 						$peak_figure = $listeners[$time_hour];
 						$peak_hour = $hour;
 						$peak_day = $days_count;
+						$peak = $listeners[$time_hour];
 					}
 				}
 				$average = round($total/$plots);
 				if($average > 0 ) {
-					echo "<td>$average</td>";
+					$output_avg .= "<td>$average</td>";
 					$graph_string_avg = $graph_string_avg."['".date("Y/m/d H:i",$time_sel)."',".$average."],";
 				} else {
 					// Hour doesn't exist, enter nothing.
-					echo "<td></td>";
+					$output_avg .= "<td>&nbsp;</td>";
 				}
-				// Record top 5
+				if($peak > 0) {
+					$output_peak .= "<td>$peak</td>";
+					$graph_string_peak .= "['".date("Y/m/d H:i",$time_sel)."',".$peak."],";
+				} else {
+					$output_peak .= "<td>&nbsp;</td>";
+				}
+				// Record top 5 average
 				for($i = 0; $i < 5; $i++) {
 					if($average > $top[$i]['figure']) {
 						// Move everything down.
@@ -85,30 +112,68 @@ function stats_week() {
 						$i = 5;	
 					}
 				}
+				// Record top 5 peak
+				for($i = 0; $i < 5; $i++) {
+					if($peak > $top_peak[$i]['figure']) {
+						// Move everything down.
+						for($j = 4; $j > $i; $j--) {
+							$top_peak[$j] = $top_peak[$j-1];	
+						}
+						// New record
+						$top_peak[$i]['figure'] = $peak;
+						$top_peak[$i]['hour'] = $hour;
+						$top_peak[$i]['day'] = $days_count;
+						$top_peak[$i]['more'] = 0;
+						$i = 5;
+					}
+					else if($peak == $top_peak[$i]['figure']) {
+						// Add 'more'
+						$top_peak[$i]['more']++;
+						$i = 5;	
+					}	
+				}
 			} else {
 				// Hour doesn't exist, enter nothing.
-				echo "<td>&nbsp;</td>";	
+				$output_avg .= "<td>&nbsp;</td>";
+				$output_peak .= "<td>&nbsp;</td>";	
 			}
 			if((++$hour >= 24) && ($days_count < 6)) {
 				// New day, new row
 				$days_count++;
-				echo "</tr>\n<tr><td>".$days[$days_count]."</td>";
+				$output_avg .= "</tr>\n<tr><td>".$days[$days_count]."</td>";
+				$output_peak .= "</tr>\n<tr><td>".$days[$days_count]."</td>";
 				$hour = 0;
 			}
 			$time_sel += 3600;
 		}
-		echo "</tr>\n</tbody></table>\n";
-		// Display statistics
-		echo "<div class=\"search_chart_figures\" id=\"chart_figures_search\"></div>\n";
+		$output_avg .= "</tr>\n</tbody></table>\n";
+		$output_peak .= "</tr>\n</tbody></table>\n";
+		
+		// Peak 
+		echo "<div class=\"week-table-peak\">\n<div class=\"grid_12\">$output_peak</div>";
+		echo "<div class=\"grid_3\">";
+		echo "<p>Top ratings:";
+		for($i = 0; $i < 5; $i++) {
+			if($top_peak[$i]['figure'] > 0) {
+				echo "<br /><span id=\"top-".($i+1)."-str\">".($i+1).": <span id=\"top-".($i+1)."\">".$top_peak[$i]['figure']."</span> - ".$days[$top_peak[$i]['day']]." at ".$top_peak[$i]['hour'].":00</span>";
+				if($top_peak[$i]['more'] > 0) echo " and ".$top_peak[$i]['more']." more...";
+			}
+		}
+		echo "</p>\n";
+		echo "</div>";
+		echo "<div class=\"grid_9\"><div class=\"search_chart_figures\" id=\"chart_figures_search_peak\"></div>\n";
 		echo "<script type=\"text/javascript\">\n";
 		echo "$(document).ready(function(){\n";
-		echo "var plot_figures = $.jqplot(\"chart_figures_search\", [[";
-		echo $graph_string_avg;
+		echo "var plot_figures_peak = $.jqplot(\"chart_figures_search_peak\", [[";
+		echo $graph_string_peak;
 		echo "]], { axes: { xaxis: { label: \"Time (min)\", pad: 0, renderer: $.jqplot.DateAxisRenderer, showTicks: false }, yaxis: { label: \"Listeners\", min: 0 } }, highlighter: { show: true, tooltipAxes: 'both' }, seriesDefaults: { lineWidth: 2, markerOptions: { size: 4 } } });\n";
 		echo "});\n";
 		echo "</script>\n";
 		echo "<noscript>Sorry, to see the graph you need a javascript enabled browser!</noscript>";
-			
+		echo "</div>\n</div>"; 
+		// Average
+		echo "<div class=\"week-table-avg\">\n<div class=\"grid_12\">$output_avg</div>";
+		echo "<div class=\"grid_3\">";
 		echo "<p>Top ratings:";
 		for($i = 0; $i < 5; $i++) {
 			if($top[$i]['figure'] > 0) {
@@ -116,8 +181,21 @@ function stats_week() {
 				if($top[$i]['more'] > 0) echo " and ".$top[$i]['more']." more...";
 			}
 		}
-		echo "</p><br />\n";
-		echo "<p>Highest peak rating: $peak_figure, on ".$days[$peak_day]." $peak_hour:00</p>\n";
+		echo "</p>\n";
+		echo "</div>";
+		echo "<div class=\"grid_9\"><div class=\"search_chart_figures\" id=\"chart_figures_search_avg\"></div>\n";
+		echo "<script type=\"text/javascript\">\n";
+		echo "$(document).ready(function(){\n";
+		echo "var plot_figures_avg = $.jqplot(\"chart_figures_search_avg\", [[";
+		echo $graph_string_avg;
+		echo "]], { axes: { xaxis: { label: \"Time (min)\", pad: 0, renderer: $.jqplot.DateAxisRenderer, showTicks: false }, yaxis: { label: \"Listeners\", min: 0 } }, highlighter: { show: true, tooltipAxes: 'both' }, seriesDefaults: { lineWidth: 2, markerOptions: { size: 4 } } });\n";
+		echo "});\n";
+		echo "</script>\n";
+		echo "<noscript>Sorry, to see the graph you need a javascript enabled browser!</noscript>";
+		echo "</div>\n</div>"; 
+		
+		// Average
+		
 		echo "<hr />\n";
 	} else {
 		
