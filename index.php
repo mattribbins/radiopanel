@@ -45,11 +45,12 @@ $user_session = new UserService($db_session);
 $user_session->init();
 
 // Check if we're a web page or using the cli (i.e. for cron)
-if (isset($_SERVER['argv'])) {
-	$page = $_SERVER['argv'][1];
+if ((isset($_GET['page']) && ($_GET['page']) != "")) {
+        $page = $_GET['page'];
 } else {
-	$page = $_GET['page'];
+        $page = $_SERVER['argv'][1];
 }
+
 
 // Choose the page determined by ?page=etc
 // Pages only available if logged in
