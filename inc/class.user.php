@@ -15,7 +15,7 @@ class UserService
 	public function __construct($db) {
 		$this->_db = $db;		
 	}
-	
+
 	public function init() {
 		// Initial check. Are we already logged in?
 		if(isset($_COOKIE['radiopanel_user'])) {
@@ -44,14 +44,14 @@ class UserService
 			$this->_username = mysql_real_escape_string($_POST['username']);
 			$this->_password = mysql_real_escape_string(sha1($_POST['password']));
 			$user = $this->checkStatus();
-			if ($user) {
+			if ($user->_loggedin) {
 				return $user;
 			} else {
 				// Destroy cookies. They're redundant.
 				setcookie('radiopanel_user', "invalid", time() - 100);
 				setcookie('radiopanel_pass', "invalid", time() - 100);
-					$this->_loggedin = false;
-					return false;
+				$this->_loggedin = false;
+				return false;
 			}
 		} else {
 			// Destroy any cookies.
@@ -61,7 +61,7 @@ class UserService
 			return false;
 		}
 	}
-	
+
 	public function logout() {
 		// Say bye bye to those cookies.
 		setcookie('radiopanel_user', "invalid", 0);
@@ -71,7 +71,7 @@ class UserService
 		$this->_password = "";
 		return true;
 	}
-	
+
 	public function checkStatus() {
 		if(isset($this->_username)) {
 			$check = $this->_db->query("SELECT * FROM `users` WHERE `username` = '$this->_username' LIMIT 0,1");
@@ -102,7 +102,7 @@ class UserService
 			return false;
 		}
 	}
-	
+
 	public function isLoggedIn() {
 		return $this->_loggedin;
 	}

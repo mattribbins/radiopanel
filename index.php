@@ -4,8 +4,7 @@
 // Licenced under the BSD Simplfied licence (see licence.txt)
 //
 // Refer to the ReadMe file (readme.txt) for installation instructions.
- 
- 
+
 // Error reporting (used for debugging. I don't suggest turning those on)
 error_reporting(0);
 ini_set("display_errors", "0"); 
@@ -57,11 +56,8 @@ if ((isset($_GET['page']) && ($_GET['page']) != "")) {
 if($user_session->isLoggedIn()) {
 	switch($page) {
 		case "logout":
-			display_head("Logging out...", "./");
-			display_header("Logging out...");
-			echo "Logging out...";
 			$user_session->logout();
-			display_footer();
+			header("Location: ./");
 			break;
 		case "live":
 			stream_livestats();
@@ -110,11 +106,8 @@ if($user_session->isLoggedIn()) {
 			display_credits();
 			break;
 		case "login":
-			display_head("Logging in...","./");
-			display_header("Logging in...");
-			echo "Logging in...";
 			$user_session->login();
-			display_footer();
+			header("Location: ./");
 			break;
 		default:
 			display_head("Home");
@@ -125,11 +118,6 @@ if($user_session->isLoggedIn()) {
 			break;
 	}
 }
-
-
-//$stream = new Stream;
-//$stream->setServer("94.23.121.91:8000", "admin", "01theHUB1449", "/hub-hq.mp3");
-//$stream->getData();
 
 
 ?>
