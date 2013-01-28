@@ -234,7 +234,7 @@ hr {
 
 /* Search */
 .search_chart_figures {
-	width: 550px;
+	width: 700px;
 	height: 270px;	
 	float: right;
 }
@@ -250,6 +250,9 @@ hr {
 .statweek {
 	margin: 0 auto;
 	width: 310px;	
+}
+.statweek-button {
+	width: 308px;	
 }
 .week-view-sel {
 	margin-bottom: 5px;	

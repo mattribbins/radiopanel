@@ -208,7 +208,7 @@ function stats_week() {
 	if(isset($_GET['week'])) {
 		echo "value=\"".$_GET['week']."\"";	
 	}
-	echo "><input class=\"ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\" value=\"Display\" type=\"submit\" style=\"width: 308px;\"></div></form></div>\n";
+	echo "><input class=\"statweek-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\" value=\"Display\" type=\"submit\"></div></form></div>\n";
 	
 	display_footer();
 	
