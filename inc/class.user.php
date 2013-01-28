@@ -44,7 +44,7 @@ class UserService
 			$this->_username = mysql_real_escape_string($_POST['username']);
 			$this->_password = mysql_real_escape_string(sha1($_POST['password']));
 			$user = $this->checkStatus();
-			if ($user->_loggedin) {
+			if ($user) {
 				return $user;
 			} else {
 				// Destroy cookies. They're redundant.
