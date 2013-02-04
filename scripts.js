@@ -108,3 +108,8 @@ $(document).ready(function(e) {
 	});
 	$("#user-access-slider-desc").text("10 (Normal, access to live & search)");
 });
+
+function weekViewZoom(date, hour) { 
+	$("#week-view-dialog").load("./?page=api&task=html_display_date&date="+date+"&time="+hour);
+	$("#week-view-dialog").dialog({modal: true, title: 'Hour zoom', minWidth: 850, minHeight: 300, height: 'auto', position: { my: 'top', at: 'top+30' }});
+}

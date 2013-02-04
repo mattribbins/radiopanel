@@ -264,6 +264,9 @@ hr {
 .week-table-avg {
 	display: block;
 }
+#week-view-zoom {
+	display: none;
+}
 .table-week > tbody {
 	border: 1px solid #CCC;
 }
@@ -290,6 +293,7 @@ hr {
 	height: 25px;
 	text-align: center;
 	vertical-align: middle;
+	cursor: pointer;
 }
 .table-week > tbody > tr > td:first-child {
 	background: #DDD url(lib/images/ui-bg_glass_35_dddddd_1x400.png) 50% 50% repeat-x;
@@ -298,6 +302,7 @@ hr {
 	text-align: left;
 	vertical-align: middle;
 	width: 98px;
+	cursor: default;
 }
 
 /* jQuery UI fixes */

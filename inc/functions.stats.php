@@ -87,13 +87,13 @@ function stats_week() {
 					$output_avg .= "<td>&nbsp;</td>";
 				}
 				if($peak > 0) {
-					$output_peak .= "<td>$peak</td>";
+					$output_peak .= "<td onclick=\"weekViewZoom(".date("'Y-m-d', 'H'",$time_sel).")\">$peak</td>";
 					$graph_string_peak .= "['".date("Y/m/d H:i",$time_sel)."',".$peak."],";
 				} else {
 					$output_peak .= "<td>&nbsp;</td>";
 				}
 				// Record top 5 average
-				for($i = 0; $i < 5; $i++) {
+				for($i = 0; $i < 10; $i++) {
 					if($average > $top[$i]['figure']) {
 						// Move everything down.
 						for($j = 4; $j > $i; $j--) {
@@ -104,16 +104,16 @@ function stats_week() {
 						$top[$i]['hour'] = $hour;
 						$top[$i]['day'] = $days_count;
 						$top[$i]['more'] = 0;
-						$i = 5;
+						$i = 10;
 					}
 					else if($average == $top[$i]['figure']) {
 						// Add 'more'
 						$top[$i]['more']++;
-						$i = 5;	
+						$i = 10;	
 					}
 				}
 				// Record top 5 peak
-				for($i = 0; $i < 5; $i++) {
+				for($i = 0; $i < 10; $i++) {
 					if($peak > $top_peak[$i]['figure']) {
 						// Move everything down.
 						for($j = 4; $j > $i; $j--) {
@@ -129,7 +129,7 @@ function stats_week() {
 					else if($peak == $top_peak[$i]['figure']) {
 						// Add 'more'
 						$top_peak[$i]['more']++;
-						$i = 5;	
+						$i = 10;	
 					}	
 				}
 			} else {
@@ -153,10 +153,10 @@ function stats_week() {
 		echo "<div class=\"week-table-peak\">\n<div class=\"grid_12\">$output_peak</div>";
 		echo "<div class=\"grid_3\">";
 		echo "<p>Top ratings:";
-		for($i = 0; $i < 5; $i++) {
+		for($i = 0; $i < 10; $i++) {
 			if($top_peak[$i]['figure'] > 0) {
 				echo "<br /><span id=\"top-".($i+1)."-str\">".($i+1).": <span id=\"top-".($i+1)."\">".$top_peak[$i]['figure']."</span> - ".$days[$top_peak[$i]['day']]." at ".$top_peak[$i]['hour'].":00</span>";
-				if($top_peak[$i]['more'] > 0) echo " and ".$top_peak[$i]['more']." more...";
+				if($top_peak[$i]['more'] > 0) echo " (+".$top_peak[$i]['more'].")";
 			}
 		}
 		echo "</p>\n";
@@ -175,10 +175,10 @@ function stats_week() {
 		echo "<div class=\"week-table-avg\">\n<div class=\"grid_12\">$output_avg</div>";
 		echo "<div class=\"grid_3\">";
 		echo "<p>Top ratings:";
-		for($i = 0; $i < 5; $i++) {
+		for($i = 0; $i < 10; $i++) {
 			if($top[$i]['figure'] > 0) {
 				echo "<br /><span id=\"top-".($i+1)."-str\">".($i+1).": <span id=\"top-".($i+1)."\">".$top[$i]['figure']."</span> - ".$days[$top[$i]['day']]." at ".$top[$i]['hour'].":00</span>";
-				if($top[$i]['more'] > 0) echo " and ".$top[$i]['more']." more...";
+				if($top[$i]['more'] > 0) echo " (+".$top[$i]['more'].")";
 			}
 		}
 		echo "</p>\n";
@@ -193,9 +193,7 @@ function stats_week() {
 		echo "</script>\n";
 		echo "<noscript>Sorry, to see the graph you need a javascript enabled browser!</noscript>";
 		echo "</div>\n</div>"; 
-		
-		// Average
-		
+		echo "<div id=\"week-view-dialog\"></div>";		
 		echo "<hr />\n";
 	} else {
 		
@@ -218,7 +216,59 @@ function stats_search() {
 	global $db_session;
 	display_head("Search");
 	display_header("Search");
+
+	$date = $_GET['date'];
+	if(isset($_GET['todate'])) { $todate = $_GET['todate']; } else { $todate = $date; }
+	$hour = $_GET['time'];
+	if(isset($_GET['totime'])) { $tohour = $_GET['totime']; } else { $tohour = $hour+1; }
+	stats_search_display();
+		
+	// Display search form
+	$hours = array("00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23");
+	echo "<div class=\"search_stats_box\">\n";
+	echo "<form action=\"./?page=search\" method=\"get\">\n";
+	echo "<input name=\"page\" value=\"search\" type=\"hidden\">\n";
+	echo "<div class=\"statsearch-1\">Search by Date / Hour<br /><input name=\"date\" id=\"search-date\" maxlength=\"32\" type=\"text\" ";
+	if(isset($date)) {
+		echo "value=\"$date\"";
+	} else {
+		echo "value=\"".date("Y-m-d")."\"";
+	}
+	echo ">";
+	echo "<select name=\"time\" id=\"search-time\">";
+	foreach($hours as $myhour) {
+		if($myhour == $hour) {
+			echo "<option value=\"$myhour\" selected=\"selected\">$myhour:00</option>";
+		} else {
+			echo "<option value=\"$myhour\">$myhour:00</option>";
+		}
+	}
+	echo "</select>";
+	echo "&nbsp; &nbsp; to &nbsp; &nbsp;"; 
+		echo "<input name=\"todate\" id=\"search-dateto\" maxlength=\"32\" type=\"text\" ";
+	if(isset($todate)) {
+		echo "value=\"$date\"";
+	} else {
+		echo "value=\"".date("Y-m-d")."\"";
+	}
+	echo ">";
+	echo "<select name=\"totime\" id=\"search-timeto\">";
+	foreach($hours as $myhour) {
+		if($myhour == $tohour) {
+			echo "<option value=\"$myhour\" selected=\"selected\">$myhour:00</option>";
+		} else {
+			echo "<option value=\"$myhour\">$myhour:00</option>";
+		}
+	}
+	echo "</select>";
+	echo "<input name=\"submit\" value=\"Search\" type=\"submit\" class=\"ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"></div>\n";
+	echo "<div class=\"clear\"></div></form></div>\n";
 	
+	display_footer();
+}
+
+function stats_search_display() {
+	global $db_session;
 	if(isset($_GET['date']) && isset($_GET['time'])) {
 		// Get timeframe
 		$date = $_GET['date'];
@@ -273,47 +323,5 @@ function stats_search() {
 		}
 		echo "<hr />\n";
 	}
-	// Display search form
-	$hours = array("00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23");
-	echo "<div class=\"search_stats_box\">\n";
-	echo "<form action=\"./?page=search\" method=\"get\">\n";
-	echo "<input name=\"page\" value=\"search\" type=\"hidden\">\n";
-	echo "<div class=\"statsearch-1\">Search by Date / Hour<br /><input name=\"date\" id=\"search-date\" maxlength=\"32\" type=\"text\" ";
-	if(isset($date)) {
-		echo "value=\"$date\"";
-	} else {
-		echo "value=\"".date("Y-m-d")."\"";
-	}
-	echo ">";
-	echo "<select name=\"time\" id=\"search-time\">";
-	foreach($hours as $myhour) {
-		if($myhour == $hour) {
-			echo "<option value=\"$myhour\" selected=\"selected\">$myhour:00</option>";
-		} else {
-			echo "<option value=\"$myhour\">$myhour:00</option>";
-		}
-	}
-	echo "</select>";
-	echo "&nbsp; &nbsp; to &nbsp; &nbsp;"; 
-		echo "<input name=\"todate\" id=\"search-dateto\" maxlength=\"32\" type=\"text\" ";
-	if(isset($todate)) {
-		echo "value=\"$date\"";
-	} else {
-		echo "value=\"".date("Y-m-d")."\"";
-	}
-	echo ">";
-	echo "<select name=\"totime\" id=\"search-timeto\">";
-	foreach($hours as $myhour) {
-		if($myhour == $tohour) {
-			echo "<option value=\"$myhour\" selected=\"selected\">$myhour:00</option>";
-		} else {
-			echo "<option value=\"$myhour\">$myhour:00</option>";
-		}
-	}
-	echo "</select>";
-	echo "<input name=\"submit\" value=\"Search\" type=\"submit\" class=\"ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"></div>\n";
-	echo "<div class=\"clear\"></div></form></div>\n";
-	
-	display_footer();
 }
 ?>
