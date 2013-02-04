@@ -10,6 +10,9 @@ function api_call() {
 		case "html_live_stats":
 			stream_getlivestats();
 			break;
+		case "html_display_date":
+			stats_search_display();
+			break;
 		default:
 			
 	}
