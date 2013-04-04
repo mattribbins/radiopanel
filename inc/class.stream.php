@@ -31,7 +31,7 @@ class Stream {
 		$data = "";
 		if(!$fp) {
 			print("Error: Unable to read data from Icecast $server");
-			print_debug("$errstr ($errno)");
+			print("$errstr ($errno)");
 			fclose($fp);
 			return(FALSE);
 		}
@@ -50,14 +50,14 @@ class Stream {
 		$xmlParser = xml_parser_create();
 		if(!xml_parse_into_struct($xmlParser, $data, $this->_values, $this->_indexes)) {
 			print("Error: Bad XML\n");
-			print_debug("-- Data --");
-			print_debug("$data");
+			print("-- Data --");
+			print("$data");
 			return(FALSE);
 		}
 		xml_parser_free($xmlParser);
 		
 		// Find the correct stream
-		for($i = 0; $i < $this->_values[$this->_indexes["SOURCES"][0]]["value"]; $i++) {
+		for($i = 0; $i < $this->_values[$this->_indexes["SOURCES"][0]]["value"]+1; $i++) {
 			if($this->_values[$this->_indexes["SOURCE"][$i*2]]["attributes"]["MOUNT"] == $this->mountpoint) {
 				$this->index = $i;
 			}

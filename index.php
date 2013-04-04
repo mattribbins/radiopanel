@@ -91,10 +91,7 @@ if($user_session->isLoggedIn()) {
 			display_credits();
 			break;
 		default:
-			display_head("Home");
-			display_header("Home");
-			echo "Hello";
-			display_footer();
+			display_homepage();
 			break;
 	}
 } else {

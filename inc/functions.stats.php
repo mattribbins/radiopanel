@@ -80,7 +80,7 @@ function stats_week() {
 				}
 				$average = round($total/$plots);
 				if($average > 0 ) {
-					$output_avg .= "<td>$average</td>";
+					$output_avg .= "<td onclick=\"weekViewZoom(".date("'Y-m-d', 'H'",$time_sel).")>$average</td>";
 					$graph_string_avg = $graph_string_avg."['".date("Y/m/d H:i",$time_sel)."',".$average."],";
 				} else {
 					// Hour doesn't exist, enter nothing.

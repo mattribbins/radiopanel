@@ -55,7 +55,7 @@ function display_navigation($access = 0) {
 	echo "<ul>";
 	echo "<li><a href=\"./\">Home</a></li>";
 	if($access) {
-		echo "<li><a href=\"./?page=live\">Live</a></li>";
+		//echo "<li><a href=\"./?page=live\">Live</a></li>";
 		if($access >= 10) {
 			echo "<li><a href=\"./?page=search\">Search</a></li>";
 		}
@@ -90,7 +90,21 @@ function display_loginbox() {
 	echo "<div class=\"loginbox-1\"></div><div class=\"loginbox-2\"><input name=\"submit\" value=\"Login\" type=\"submit\"></div>\n";
 	echo "</form></div>\n";
 }
-	
+
+function display_homepage() {
+	display_head("Home");
+	display_header("Home");
+	echo "<h3>Welcome to Hub RadioPanel</h3>\n";
+	// Display live figures
+	echo "<h4>Live figures</h4>";
+	echo "<div id=\"streamstats\">";
+	stream_getlivestats();
+	echo "</div><br />";
+	echo "<p style=\"font-style:italic;\">Note: figures are live and will automatically update<br />Do <strong>not</strong> disclose live figures on-air under any circumstances!</p><br /><a href=\"#\" id=\"dialog_link\"  class=\"ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"><span class=\"ui-icon ui-icon-newwin\"></span>Open live stats in a popup window</a>\n";
+	display_footer();
+}
+
+
 function display_credits() {
 	display_head();
 	display_header();
