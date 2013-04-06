@@ -57,7 +57,7 @@ class Stream {
 		xml_parser_free($xmlParser);
 		
 		// Find the correct stream
-		for($i = 0; $i < $this->_values[$this->_indexes["SOURCES"][0]]["value"]+1; $i++) {
+		for($i = 0; $i < sizeof($this->_indexes["SOURCE"]); $i++) {
 			if($this->_values[$this->_indexes["SOURCE"][$i*2]]["attributes"]["MOUNT"] == $this->mountpoint) {
 				$this->index = $i;
 			}
