@@ -113,7 +113,7 @@ function stream_list() {
 			} else { 
 				$active = "<img src=\"img/bullet_red.png\" title=\"Server Inactive\" />"; 
 			}
-			echo "<tr><td>".$server['sid']."</td><td>".$server['name']."</td><td>".$server['server']."</td><td>".$server['mountpoint']."</td><td>$active</td><td>$status</td><td><a href=\"./?streams&task=edit&sid=".$server['sid']."\"><img src=\"img/pencil.png\" title=\"Edit\" alt=\"Edit\" /></a>&nbsp;<a href=\"./?page=streams&task=delete&sid=".$server['sid']."\"><img src=\"img/delete.png\" title=\"Remove\" alt=\"Remove\" /></a></td></tr>\n";	
+			echo "<tr><td>".$server['sid']."</td><td>".$server['name']."</td><td>".$server['server']."</td><td>".$server['mountpoint']."</td><td>$active</td><td>$status</td><td><a href=\"./?page=streams&task=edit&sid=".$server['sid']."\"><img src=\"img/pencil.png\" title=\"Edit\" alt=\"Edit\" /></a>&nbsp;<a href=\"./?page=streams&task=delete&sid=".$server['sid']."\"><img src=\"img/delete.png\" title=\"Remove\" alt=\"Remove\" /></a></td></tr>\n";	
 		}
 	}
 	echo "</table>\n";
