@@ -13,19 +13,17 @@ class Database {
 	}
 
 	public function connect() {
-		$this->conn = mysql_connect($this->_config['host'], $this->_config['username'], $this->_config['password']);
-		if(!$this->conn) {
-			echo "<span style=\"color: red\">Error: Cannot connect to MySQL server. ".mysql_error()."</span><br />";
+		$this->conn = new mysqli($this->_config['host'], $this->_config['username'], $this->_config['password'], $this->_config['database']);
+		
+		if ($this->conn->connect_error) {
+			trigger_error('Database connection failed: ' . $this->conn->connect_error, E_USER_ERROR);
 			return false;
 		}
-		mysql_select_db($this->_config['database']);
-
 		return true;
 	}
 
 	public function query($sql, $associative=false) {
-		mysql_select_db($this->database);
-		$result = mysql_query($sql, $this->conn) or die(mysql_error());
+		$result = $this->conn->query($sql);
 
 		if($associative) return mysql_fetch_assoc($result);
 
@@ -33,7 +31,7 @@ class Database {
 	}
 
 	public function disconnect() {
-		mysql_close($this->conn);
+		$this->conn->close();
 		return;
 	}
 }
