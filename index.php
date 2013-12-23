@@ -5,11 +5,11 @@
 //
 // Refer to the ReadMe file (readme.txt) for installation instructions.
 
-// Error reporting (used for debugging. I don't suggest turning those on)
-error_reporting(0);
-ini_set("display_errors", "0"); 
 
 // Includes 
+if(!file_exists("config.php")) {
+	die("Critical Error: No configuration found, <a href=\"./setup.php\">please run setup.</a>");	
+}
 require("config.php");
 require("inc/init.php");
 require("inc/functions.php");
@@ -22,7 +22,9 @@ require("inc/class.stream.php");
 require("inc/class.user.php");
 
 // Defines
-define('_VER', '1.0b2');
+define('_VER', '1.0b3');
+//error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(0);
 
 // Initialisation
 session_start();
@@ -33,11 +35,11 @@ $db_config = array(
 	'password'  => $db_pass	
 );
 // Delete setup.php if for some reason it exists. If this file cannot be deleted, die!
-if(file_exists("setup.php")) {
+/*if(file_exists("setup.php")) {
 	if(!unlink("setup.php")) {
 		die("Critical Error: setup.php is still present! You must remove this file before using RadioPanel!");	
 	}
-}
+}*/
 $db_session = new Database($db_config);
 $db_session->connect();
 $user_session = new UserService($db_session);
@@ -45,9 +47,13 @@ $user_session->init();
 
 // Check if we're a web page or using the cli (i.e. for cron)
 if ((isset($_GET['page']) && ($_GET['page']) != "")) {
-        $page = $_GET['page'];
+    $page = $_GET['page'];
 } else {
-        $page = $_SERVER['argv'][1];
+	if(isset($_SERVER['argv'])) {
+		$page = $_SERVER['argv'][1];
+	} else {
+		$page = "";
+	}
 }
 
 

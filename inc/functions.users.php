@@ -5,8 +5,8 @@
 
 function user_interface() {
 	global $user_session;
-	$task = mysql_real_escape_string($_GET['task']);
-	$uid = mysql_real_escape_string($_GET['uid']);
+	$task = ($_GET['task']);
+	$uid = ($_GET['uid']);
 	
 	display_head("User Management");
 	display_header("User Management");
@@ -37,7 +37,7 @@ function user_list() {
 	$result = $db_session->query("SELECT `id`, `username`, `email`, `access` FROM `users`;");
 	if($result) {
 		// Each server post details along with edit buttons.
-		while($user = mysql_fetch_array($result)) {
+		while($user = mysqli_fetch_array($result)) {
 			echo "<tr><td>".$user['id']."</td><td>".$user['username']."</td><td>".$user['email']."</td><td>".$user['access']."</td><td><a href=\"./?users&task=edit&uid=".$user['id']."\"><img src=\"img/pencil.png\" title=\"Edit\" alt=\"Edit\" /></a>&nbsp;<a href=\"./?page=users&task=delete&uid=".$user['id']."\"><img src=\"img/delete.png\" title=\"Remove\" alt=\"Remove\" /></a></td></tr>\n";	
 		}
 	}
@@ -73,11 +73,11 @@ function user_add() {
 	echo "<p><a href=\".\?page=users\">Back...</a></p>";
 	if(isset($_POST['submit'])) {
 		// We're adding a stream
-		$username = mysql_real_escape_string($_POST['username']);
-		$email = mysql_real_escape_string($_POST['email']);
-		$password_1 = mysql_real_escape_string($_POST['password_1']);
-		$password_2 = mysql_real_escape_string($_POST['password_2']);
-		$access = mysql_real_escape_string($_POST['access']);
+		$username = $db_session->real_escape_string($_POST['username']);
+		$email = $db_session->real_escape_string($_POST['email']);
+		$password_1 = $db_session->real_escape_string($_POST['password_1']);
+		$password_2 = $db_session->real_escape_string($_POST['password_2']);
+		$access = $db_session->real_escape_string($_POST['access']);
 		if(!$access) $access = 10;
 		
 		do {

@@ -13,7 +13,7 @@ function stats_week() {
 	// Do we have a commence date?
 	if(isset($_GET['date']) && $_GET['date'] != "") {
 		// Get time frame
-		$time_start = strtotime(mysql_real_escape_string($_GET['date']."00:00"));
+		$time_start = strtotime(($_GET['date']."00:00"));
 		$time_end = $time_start + 604800;
 		// Vars Init
 		$hour = 0;
@@ -42,9 +42,10 @@ function stats_week() {
 			$top_peak[$i]['day'] = 0;
 			$top_peak[$i]['more'] = 0;
 		}
-		echo "<div class=\"grid_9\">\n<h3>Week commencing ".$_GET['date']."</h3>\n</div>\n<div class=\"grid_3 week-view-sel\">";
-		echo "<input type=\"radio\" id=\"week-view-sel-peak\" name=\"week-view-sel-peak\" /><label for=\"week-view-sel-peak\">Peak</label>";
-		echo "<input type=\"radio\" id=\"week-view-sel-avg\" name=\"week-view-sel-avg\" /><label for=\"week-view-sel-avg\">Average</label>";
+		echo "<div class=\"row\">";
+		echo "<div class=\"col-md-8\">\n<h3>Week commencing ".$_GET['date']."</h3>\n</div>\n<div class=\"col-md-4 week-view-sel\">";
+		echo "<button type=\"button\" id=\"week-view-sel-peak\" name=\"week-view-sel-peak\" class=\"btn btn-default\">Peak</button>";
+		echo "<button type=\"button\" id=\"week-view-sel-avg\" name=\"week-view-sel-avg\" class=\"btn btn-default\">Average</button>";
 		echo "</div>";
 		// Table of stats (yay)
 		$output_avg = "<table class=\"table-week table-week-avg\">\n<thead><tr><td>Hour</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td></tr></thead>\n";
@@ -63,7 +64,7 @@ function stats_week() {
 				$plots = 0;
 				$total = 0;
 				$peak = 0;
-				while($temp = mysql_fetch_array($result)) {
+				while($temp = mysqli_fetch_array($result)) {
 					$time_hour = round(($temp['timestamp'] - $time_sel) / 60);
 					$listeners[$time_hour] = $temp['listeners'];
 					$plots++;
@@ -78,7 +79,7 @@ function stats_week() {
 						$peak = $listeners[$time_hour];
 					}
 				}
-				$average = round($total/$plots);
+				$average = @round($total/$plots);
 				if($average > 0 ) {
 					$output_avg .= "<td onclick=\"weekViewZoom(".date("'Y-m-d', 'H'",$time_sel).")\">$average</td>";
 					$graph_string_avg = $graph_string_avg."['".date("Y/m/d H:i",$time_sel)."',".$average."],";
@@ -150,8 +151,8 @@ function stats_week() {
 		$output_peak .= "</tr>\n</tbody></table>\n";
 		
 		// Peak 
-		echo "<div class=\"week-table-peak\">\n<div class=\"grid_12\">$output_peak</div>";
-		echo "<div class=\"grid_3\">";
+		echo "<div class=\"week-table-peak\">\n<div class=\"col-md-12\">$output_peak</div>";
+		echo "<div class=\"col-md-3\">";
 		echo "<p>Top ratings:";
 		for($i = 0; $i < 10; $i++) {
 			if($top_peak[$i]['figure'] > 0) {
@@ -161,7 +162,7 @@ function stats_week() {
 		}
 		echo "</p>\n";
 		echo "</div>";
-		echo "<div class=\"grid_9\"><div class=\"search_chart_figures\" id=\"chart_figures_search_peak\"></div>\n";
+		echo "<div class=\"col-md-9\"><div class=\"search_chart_figures\" id=\"chart_figures_search_peak\"></div>\n";
 		echo "<script type=\"text/javascript\">\n";
 		echo "$(document).ready(function(){\n";
 		echo "var plot_figures_peak = $.jqplot(\"chart_figures_search_peak\", [[";
@@ -172,8 +173,8 @@ function stats_week() {
 		echo "<noscript>Sorry, to see the graph you need a javascript enabled browser!</noscript>";
 		echo "</div>\n</div>"; 
 		// Average
-		echo "<div class=\"week-table-avg\">\n<div class=\"grid_12\">$output_avg</div>";
-		echo "<div class=\"grid_3\">";
+		echo "<div class=\"week-table-avg\">\n<div class=\"col-md-12\">$output_avg</div>";
+		echo "<div class=\"col-md-3\">";
 		echo "<p>Top ratings:";
 		for($i = 0; $i < 10; $i++) {
 			if($top[$i]['figure'] > 0) {
@@ -183,7 +184,7 @@ function stats_week() {
 		}
 		echo "</p>\n";
 		echo "</div>";
-		echo "<div class=\"grid_9\"><div class=\"search_chart_figures\" id=\"chart_figures_search_avg\"></div>\n";
+		echo "<div class=\"col-md-9\"><div class=\"search_chart_figures\" id=\"chart_figures_search_avg\"></div>\n";
 		echo "<script type=\"text/javascript\">\n";
 		echo "$(document).ready(function(){\n";
 		echo "var plot_figures_avg = $.jqplot(\"chart_figures_search_avg\", [[";
@@ -207,6 +208,8 @@ function stats_week() {
 		echo "value=\"".$_GET['week']."\"";	
 	}
 	echo "><input class=\"statweek-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\" value=\"Display\" type=\"submit\"></div></form></div>\n";
+	
+	echo "</div>";
 	
 	display_footer();
 	

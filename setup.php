@@ -7,25 +7,72 @@
 include("inc/class.db.php");
 include("inc/class.user.php");
 
-echo "<!DOCTYPE html>\n";
-echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
-echo "<head>\n";
-echo "<base href=\"".$_SERVER['SERVER_NAME']."\">\n";
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-echo "<link rel=\"shortcut icon\" href=\"favicon.ico\" type=\"image/x-icon\" />\n";
-echo "<link href=\"style.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
-echo "<link href=\"lib/grid.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
-echo "<link href=\"lib/jquery-ui-1.9.2.custom.min.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
-echo "<title>RadioPanel Setup </title>\n";
-echo "<script src=\"lib/jquery-1.8.3.min.js\"></script>\n";
-echo "<script src=\"lib/jquery-ui-1.9.2.custom.min.js\"></script>\n";
-echo "<script src=\"scripts.js\"></script>\n";
-echo "</head>\n<body><div id=\"main\" class=\"container_12\">\n";
+?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <base href="".$_SERVER['SERVER_NAME']."">
+    <meta http-equiv="Content-Type" content="text/html charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link href="lib/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="lib/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+    <link href="lib/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" type="text/css" />
+    <title>RadioPanel Setup </title>
+    <script src="lib/jquery-1.8.3.min.js"></script>
+    <script src="lib/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="scripts.js"></script>
+</head>
+<body>
+
+<div id="wrap">
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">RadioPanel</a>
+		</div>
+		<div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Setup</a></li>
+            </ul>
+		</div><!--/.nav-collapse -->
+	</div>
+</div>
+    
+    
+<div class="container">
+
+
+<?php
+
 
 if(isset($_POST['submit'])) {
-
+	
 }
-if(isset($_POST['submit']) && ($_POST['setup'] == 1)) {
+if(isset($_POST['submit']) && ($_POST['setup'] == 0)) {
+
+	echo "<h1>Step 1</h1>\n";
+	echo "<p>We need to set up a MySQL / MariaDB database. Please enter your database details.</p>\n";
+	echo "<form name=\"setup\" action=\"./setup.php\" method=\"post\"><table>\n";
+	echo "<tr><td>Database Host</td><td><input name=\"db_host\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
+	echo "<tr><td>Database Name</td><td><input name=\"db_name\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
+	echo "<tr><td>Database Username</td><td><input name=\"db_user\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
+	echo "<tr><td>Database Password</td><td><input name=\"db_pass\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
+	echo "<tr><td>Create database</td><td><input name=\"db_create\" type=\"checkbox\"> <strong>Note:</strong> the next step will fail if the database already exists.</td></tr>";
+	echo "<input name=\"setup\" type=\"hidden\" value=\"1\">";
+	echo "<tr><td></td><td><input type=\"submit\" name=\"submit\" value=\"Submit\"></td></tr>";
+	echo "</table></form>";
+}
+else if(isset($_POST['submit']) && ($_POST['setup'] == 1)) {
 	// Database
 	$db_host = $_POST['db_host'];
 	$db_name = $_POST['db_name'];
@@ -38,7 +85,7 @@ if(isset($_POST['submit']) && ($_POST['setup'] == 1)) {
 		'password'  => $db_pass	
 	);
 	$db_session = new Database($db_config);	
-	echo "<h1>RadioPanel Setup - Step 2</h1>\n";
+	echo "<h1>Step 2</h1>\n";
 	echo "<p>Radiopanel will now attempt to connect to the database and perform initial setup</p>";
 	do {
 		// Initial connect
@@ -96,7 +143,7 @@ if(isset($_POST['submit']) && ($_POST['setup'] == 1)) {
 	} while(0);
 }
 else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
-	echo "<h1>RadioPanel Setup - Step 2</h1>";
+	echo "<h1>Step 3</h1>";
 	do {
 		// Connect to database using config file we just set up.
 		include("config.php");
@@ -124,7 +171,7 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 	$add_pass = $_POST['pass'];
 	$add_email = $_POST['email'];
 	$config_write = false;
-	echo "<h1>RadioPanel Setup - Step 3</h1>";
+	echo "<h1>Step 4</h1>";
 	do {
 		include("config.php");
 		$db_config = array(	
@@ -139,9 +186,9 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 			break;
 		}
 		// Add user account to database
-		$add_user = mysql_real_escape_string($add_user);
-		$add_pass = mysql_real_escape_string($add_pass);
-		$add_email = mysql_real_escape_string($add_email);
+		$add_user = $db_session->real_escape_string($add_user);
+		$add_pass = $db_session->real_escape_string($add_pass);
+		$add_email = $db_session->real_escape_string($add_email);
 		$user = new UserService($db_session);
 		$result = $user->registerUser($add_user, $add_pass, $add_email, 99);
 		if(!$result) {
@@ -152,7 +199,7 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 		echo "<form name=\"setup\" action=\"./setup.php\" method=\"post\"><input name=\"setup\" type=\"hidden\" value=\"4\"><input type=\"submit\" name=\"submit\" value=\"Next\"></form>";
 	} while(0);
 } else if(isset($_POST['submit']) && ($_POST['setup'] == 4)) {
-	echo "<h1>RadioPanel Setup - Step 4</h1>";
+	echo "<h1>Step 5</h1>";
 	do {
 		// Promot user to set up cron job and delete this file.
 		echo "<h2>Cron Job</h2>";
@@ -178,20 +225,28 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 		}
 	} while(0);
 } else {
-	echo "<h1>RadioPanel Setup - Step 1</h1>\n";
-	echo "<p>Welcome to RadioPanel setup. Please enter your MySQL details.</p>\n";
-	echo "<form name=\"setup\" action=\"./setup.php\" method=\"post\"><table>\n";
-	echo "<tr><td>Database Host</td><td><input name=\"db_host\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
-	echo "<tr><td>Database Name</td><td><input name=\"db_name\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
-	echo "<tr><td>Database Username</td><td><input name=\"db_user\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
-	echo "<tr><td>Database Password</td><td><input name=\"db_pass\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
-	echo "<tr><td>Create database</td><td><input name=\"db_create\" type=\"checkbox\"> <strong>Note:</strong> the next step will fail if the database already exists.</td></tr>";
-	echo "<input name=\"setup\" type=\"hidden\" value=\"1\">";
-	echo "<tr><td></td><td><input type=\"submit\" name=\"submit\" value=\"Submit\"></td></tr>";
-	echo "</table></form>";
+	?>
+    <div class="jumbotron">
+        <h1>Hello there...</h1>
+        <p>We will now begin the process of setting up RadioPanel Icecast stats recorder</p>
+        <p>
+        	<form name="setup" action="./setup.php" method="post">
+            <input name="setup" type="hidden" value="0">
+            <input type="submit" name="submit" class="btn btn-lg btn-primary" value="Let's go!">
+            </form>
+        </p>
+    </div>
+    <?php
 }
-
-echo "</div></body></html>";
-
-
 ?>
+</div>
+
+</div>
+<div id="footer">
+    <div class="container">
+   		<p class="text-muted">Powered by RadioPanel</p>
+    </div>
+</div>
+
+</body>
+</html>

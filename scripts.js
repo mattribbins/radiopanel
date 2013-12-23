@@ -2,9 +2,7 @@
 
 $(document).ready(function(e) {
 	
-	// Week view scripts
-	$('.week-view-sel').buttonset();
-	
+	// Week view scripts	
 	$("#week-view-sel-peak").click(function () {
 		$('.week-table-avg').fadeOut(100, "swing" , function() {
 			$('.week-table-peak').fadeIn(100);

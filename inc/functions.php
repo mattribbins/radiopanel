@@ -5,7 +5,7 @@
 
 // API Calls
 function api_call() {
-	$task = mysql_real_escape_string($_GET['task']);
+	$task = $_GET['task'];
 	switch($task) {
 		case "html_live_stats":
 			stream_getlivestats();
@@ -14,6 +14,7 @@ function api_call() {
 			stats_search_display();
 			break;
 		default:
+			echo "Nope.avi";
 			
 	}
 }

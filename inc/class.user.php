@@ -23,8 +23,8 @@ class UserService
 			$this->_username = $_COOKIE['radiopanel_user'];
 			$this->_password = $_COOKIE['radiopanel_pass'];
 			// Escape the username/password. Trust no-one.
-			$this->_username = mysql_real_escape_string($this->_username);
-			$this->_password = mysql_real_escape_string($this->_password);
+			$this->_username = $this->_db->real_escape_string($this->_username);
+			$this->_password = $this->_db->real_escape_string($this->_password);
 			$this->_loggedin = true;
 			if(!$this->checkStatus()) {
 				// Not a valid session. Destroy any cookies and set as not logged in.
@@ -41,8 +41,8 @@ class UserService
 			$cookie_time = time() + 31556952;
 			setcookie('radiopanel_user', $_POST['username'], $cookie_time);
 			setcookie('radiopanel_pass', sha1($_POST['password']), $cookie_time);
-			$this->_username = mysql_real_escape_string($_POST['username']);
-			$this->_password = mysql_real_escape_string(sha1($_POST['password']));
+			$this->_username = $this->_db->real_escape_string($_POST['username']);
+			$this->_password = $this->_db->real_escape_string(sha1($_POST['password']));
 			$user = $this->checkStatus();
 			if ($user) {
 				return $user;
@@ -78,7 +78,7 @@ class UserService
 			if(!$check) {
 				$this->_loggedin = false;
 			} else {
-				while($info = mysql_fetch_array($check)) {
+				while($info = mysqli_fetch_array($check)) {
 					if($info['salt'] != "") {
 						$password = sha1($info['salt'].$this->_password);
 					} else {

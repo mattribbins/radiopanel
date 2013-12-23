@@ -13,8 +13,8 @@
 // Stream Interface
 function stream_interface() {
 	global $user_session;
-	$task = mysql_real_escape_string($_GET['task']);
-	$sid = mysql_real_escape_string($_GET['sid']);
+	$task = ($_GET['task']);
+	$sid = ($_GET['sid']);
 	
 	display_head("Stream Management");
 	display_header("Stream Management");
@@ -44,7 +44,7 @@ function stream_recordcron() {
 	$result = $db_session->query("SELECT * FROM `streams` WHERE `active`='1';");
 	if($result) {
 		// Each server post details along with edit buttons.
-		while($server = mysql_fetch_array($result)) {
+		while($server = mysqli_fetch_array($result)) {
 			$stream = new Stream($server['server'], $server['username'], $server['password'], $server['mountpoint']);
 			if($stream->isLive()) {
 				$temp = $stream->getCurrentListenersCount();
@@ -80,7 +80,7 @@ function stream_getlivestats() {
 	$result = $db_session->query("SELECT * FROM `streams` WHERE `active`='1';");
 	if($result) {
 		// Each server post details along with edit buttons.
-		while($server = mysql_fetch_array($result)) {
+		while($server = mysqli_fetch_array($result)) {
 			$stream = new Stream($server['server'], $server['username'], $server['password'], $server['mountpoint']);
 			if($stream->isLive()) {
 				$temp = $stream->getCurrentListenersCount();
@@ -100,7 +100,7 @@ function stream_list() {
 	$result = $db_session->query("SELECT * FROM `streams` LIMIT 100;");
 	if($result) {
 		// Each server post details along with edit buttons.
-		while($server = mysql_fetch_array($result)) {
+		while($server = mysqli_fetch_array($result)) {
 			$stream = new Stream($server['server'], $server['username'], $server['password'], $server['mountpoint']);
 			if($stream->isLive()) {
 				$status = "<img src=\"img/bullet_green.png\" title=\"Server Online\" />"; 
@@ -147,13 +147,13 @@ function stream_edit($sid) {
 	echo "<p><a href=\".\?page=streams\">Back...</a></p>";
 	if(isset($_POST['submit'])) {
 		// We're making ammendments to a stream
-		$name = mysql_real_escape_string($_POST['name']);
-		$server = mysql_real_escape_string($_POST['server']);
-		$username = mysql_real_escape_string($_POST['username']);
-		$password = mysql_real_escape_string($_POST['password']);
-		$mountpoint = mysql_real_escape_string($_POST['mountpoint']);
-		if(mysql_real_escape_string($_POST['active']) == "on") { $active = TRUE; } else { $active = FALSE; }
-		$sid = mysql_real_escape_string($_POST['sid']);
+		$name = $db_session->real_escape_string($_POST['name']);
+		$server = $db_session->real_escape_string($_POST['server']);
+		$username = $db_session->real_escape_string($_POST['username']);
+		$password = $db_session->real_escape_string($_POST['password']);
+		$mountpoint = $db_session->real_escape_string($_POST['mountpoint']);
+		if(($_POST['active']) == "on") { $active = TRUE; } else { $active = FALSE; }
+		$sid = $db_session->real_escape_string($_POST['sid']);
 		
 		$result = $db_session->query("UPDATE `streams` SET `name`='$name', `server`='$server', `username`='$username', `password`='$password', `mountpoint`='$mountpoint', `active`='$active' WHERE `sid`='$sid' LIMIT 1;");
 		if($result) {
@@ -163,12 +163,12 @@ function stream_edit($sid) {
 		}
 	} 
 	if(isset($_POST['submit-new']) && isset($_POST['sid-new'])) {
-		$name = mysql_real_escape_string($_POST['name']);
-		$server = mysql_real_escape_string($_POST['server']);
-		$username = mysql_real_escape_string($_POST['username']);
-		$password = mysql_real_escape_string($_POST['password']);
-		$mountpoint = mysql_real_escape_string($_POST['mountpoint']);
-		if(mysql_real_escape_string($_POST['active']) == "on") { $active = TRUE; } else { $active = FALSE; }
+		$name = $db_session->real_escape_string($_POST['name']);
+		$server = $db_session->real_escape_string($_POST['server']);
+		$username = $db_session->real_escape_string($_POST['username']);
+		$password = $db_session->real_escape_string($_POST['password']);
+		$mountpoint = $db_session->real_escape_string($_POST['mountpoint']);
+		if(($_POST['active']) == "on") { $active = TRUE; } else { $active = FALSE; }
 		if(!$name || !$server || !$username || !$password || !$mountpoint) {
 			echo "<h3 class=\"error\">Error: A field was left empty.</h3>\n";
 		} else {
@@ -181,8 +181,8 @@ function stream_edit($sid) {
 	// Display the editor. We will get the updated record from the database.
 	// If SID=0 or incorrect, show form for new server.
 	$result = $db_session->query("SELECT * FROM `streams` WHERE `sid` = '$sid' LIMIT 1;");
-	if(mysql_num_rows($result)) {
-		$server = mysql_fetch_array($result);
+	if(mysqli_num_rows($result)) {
+		$server = mysqli_fetch_array($result);
 		echo "<h3>Server $sid</h3>\n";
 		echo "<div class=\"editstream\">\n";
 		echo "<form action=\"./?page=streams&task=edit&sid=$sid\" method=\"post\">\n";
