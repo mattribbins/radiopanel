@@ -295,7 +295,7 @@ function stats_search_display() {
 				$listeners[$i] = 0;
 			}
 			// Get each result within the timeframe, add them to the array.
-			while($temp = mysql_fetch_array($result)) {
+			while($temp = mysqli_fetch_array($result)) {
 				$timestamp = round(($temp['timestamp'] - $timestamp_start) / 60);
 				$listeners[$timestamp] = $temp['listeners'];
 				$plots++;
