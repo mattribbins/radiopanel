@@ -30,13 +30,13 @@ function stats_week() {
 		$output_peak = "";
 		$graph_string_avg = "";
 		$graph_string_peak = "";
-		for($i = 0; $i < 5; $i++) {
+		for($i = 0; $i < 10; $i++) {
 			$top[$i]['figure'] = 0;
 			$top[$i]['hour'] = 0;
 			$top[$i]['day'] = 0;
 			$top[$i]['more'] = 0;
 		}
-		for($i = 0; $i < 5; $i++) {
+		for($i = 0; $i < 10; $i++) {
 			$top_peak[$i]['figure'] = 0;
 			$top_peak[$i]['hour'] = 0;
 			$top_peak[$i]['day'] = 0;
@@ -125,7 +125,7 @@ function stats_week() {
 						$top_peak[$i]['hour'] = $hour;
 						$top_peak[$i]['day'] = $days_count;
 						$top_peak[$i]['more'] = 0;
-						$i = 5;
+						$i = 10;
 					}
 					else if($peak == $top_peak[$i]['figure']) {
 						// Add 'more'
