@@ -32,16 +32,7 @@ function display_head($title,$redirect="") {
 
 
     <title>RadioPanel - <?php echo $title; ?></title>
-    <script src="lib/jquery-1.8.3.min.js"></script>
-    <script src="lib/jquery-ui-1.9.2.custom.min.js"></script>
-    <script src="lib/bootstrap.min.js"></script>
-    <script src="scripts.js"></script>
-    <!--[if lt IE 9]><script language=\"javascript\" type=\"text/javascript\" src=\"lib/excanvas.js\"></script><![endif]-->
-	<script type="text/javascript" src="lib/jquery.jqplot.min.js"></script>;
-	<script type="text/javascript" src="lib/plugins/jqplot.highlighter.min.js"></script>
-	<script type="text/javascript" src="lib/plugins/jqplot.cursor.min.js"></script>
-	<script type="text/javascript" src="lib/plugins/jqplot.dateAxisRenderer.min.js"></script>
-</head>
+
 <body>
 
 <div id="wrap">
@@ -116,6 +107,18 @@ function display_footer() {
     </div>
 </div>
 
+<!-- Scripts I say -->
+<script src="lib/jquery-1.8.3.min.js"></script>
+<script src="lib/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<!--[if lt IE 9]><script language=\"javascript\" type=\"text/javascript\" src=\"lib/excanvas.js\"></script><![endif]-->
+<script type="text/javascript" src="lib/jquery.jqplot.min.js"></script>;
+<script type="text/javascript" src="lib/plugins/jqplot.highlighter.min.js"></script>
+<script type="text/javascript" src="lib/plugins/jqplot.cursor.min.js"></script>
+<script type="text/javascript" src="lib/plugins/jqplot.dateAxisRenderer.min.js"></script>
+<script src="scripts.js"></script>
+
+</head>
 </body>
 </html>
 	
@@ -151,13 +154,18 @@ function display_homepage() {
 function display_credits() {
 	display_head();
 	display_header();
-	echo "<p>RadioPanel by Matt Ribbins (<a href=\"http://www.mattyribbo.co.uk\">mattyribbo.co.uk</a>)</p><br />\n";
-	echo "<p>RadioPanel uses the following:</p>\n";
-	echo "<p> - Icons from the <a href=\"http://www.famfamfam.com/lab/icons/silk/\">Silk Icon Pack by famfamfam.com</a></p>\n";
-	echo "<p> - jQuery & jQuery UI, licenced under the MIT Licence.</p>\n";
-	echo "<p> - jqGraph, licenced under the MIT Licence.</p>\n";
-	echo "<p> - 960 Grid System, licenced under the MIT Licence.</p>\n";
-	echo "<br /><p>Originally developed for <a href=\"http://www.hubradio.co.uk\">Hub Radio</a>, student radio station at UWE Students' Union, University of the West of England, Bristol.</p>\n";
+	?>
+    <p>RadioPanel version <?php echo _VER; ?></p>
+    <p>Developed by <a href="http://www.mattyribbo.co.uk" target="_blank">Matt Ribbins</a> for Hub Radio, station at UWE Students' Union, University of the West of England, Bristol.</p>
+    <p>Licenced under the <a href="./LICENCE.txt">BSD Simplified Licence</a></p>
+    <p>RadioPanel uses the following packages:</p>
+    <ul>
+    	<li>Icons from the <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk Icon Pack by famfamfam.com</a></li>
+        <li><a href="http://www.getbootstrap.com" target="_blank">Bootstrap</a> interface from Twitter</li>
+        <li>jQuery & jQuery UI, licenced under the MIT Licence.</li>
+	    <li>jqGraph, licenced under the MIT Licence.</li>
+	</ul>
+    <?php
 	display_footer();
 }
 ?>
