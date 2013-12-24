@@ -32,7 +32,17 @@ function display_head($title,$redirect="") {
 
 
     <title>RadioPanel - <?php echo $title; ?></title>
+    <script src="lib/jquery-1.8.3.min.js"></script>
+    <script src="lib/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <!--[if lt IE 9]><script language=\"javascript\" type=\"text/javascript\" src=\"lib/excanvas.js\"></script><![endif]-->
+	<script type="text/javascript" src="lib/jquery.jqplot.min.js"></script>;
+	<script type="text/javascript" src="lib/plugins/jqplot.highlighter.min.js"></script>
+	<script type="text/javascript" src="lib/plugins/jqplot.cursor.min.js"></script>
+	<script type="text/javascript" src="lib/plugins/jqplot.dateAxisRenderer.min.js"></script>
+    <script src="scripts.js"></script>
 
+</head>
 <body>
 
 <div id="wrap">
@@ -107,18 +117,6 @@ function display_footer() {
     </div>
 </div>
 
-<!-- Scripts I say -->
-<script src="lib/jquery-1.8.3.min.js"></script>
-<script src="lib/jquery-ui-1.9.2.custom.min.js"></script>
-<script src="lib/bootstrap.min.js"></script>
-<!--[if lt IE 9]><script language=\"javascript\" type=\"text/javascript\" src=\"lib/excanvas.js\"></script><![endif]-->
-<script type="text/javascript" src="lib/jquery.jqplot.min.js"></script>;
-<script type="text/javascript" src="lib/plugins/jqplot.highlighter.min.js"></script>
-<script type="text/javascript" src="lib/plugins/jqplot.cursor.min.js"></script>
-<script type="text/javascript" src="lib/plugins/jqplot.dateAxisRenderer.min.js"></script>
-<script src="scripts.js"></script>
-
-</head>
 </body>
 </html>
 	
