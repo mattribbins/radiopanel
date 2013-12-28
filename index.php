@@ -17,31 +17,17 @@ require("inc/functions.stream.php");
 require("inc/functions.stats.php");
 require("inc/functions.users.php");
 require("inc/functions.interface.php");
-require("inc/class.db.php");
 require("inc/class.stream.php");
 require("inc/class.user.php");
 
 // Defines
 define('_VER', '1.0b3');
 //error_reporting(E_ALL ^ E_NOTICE);
-error_reporting(0);
 
 // Initialisation
 session_start();
-$db_config = array(	
-	'host'      => $db_host,
-	'username'  => $db_user,
-	'database'  => $db_name,
-	'password'  => $db_pass	
-);
-// Delete setup.php if for some reason it exists. If this file cannot be deleted, die!
-/*if(file_exists("setup.php")) {
-	if(!unlink("setup.php")) {
-		die("Critical Error: setup.php is still present! You must remove this file before using RadioPanel!");	
-	}
-}*/
-$db_session = new Database($db_config);
-$db_session->connect();
+
+$db_session = new mysqli($db_host, $db_user, $db_pass, $db_name);
 $user_session = new UserService($db_session);
 $user_session->init();
 

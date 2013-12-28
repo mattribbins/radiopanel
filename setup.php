@@ -4,7 +4,6 @@
 //
 // This file must be deleted once run (or if manual setup has been completed);
 
-include("inc/class.db.php");
 include("inc/class.user.php");
 
 ?>
@@ -78,13 +77,7 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 1)) {
 	$db_name = $_POST['db_name'];
 	$db_user = $_POST['db_user'];
 	$db_pass = $_POST['db_pass'];
-	$db_config = array(	
-		'host'      => $db_host,
-		'username'  => $db_user,
-		'database'  => $db_name,
-		'password'  => $db_pass	
-	);
-	$db_session = new Database($db_config);	
+	$db_session = new mysqli($db_host, $db_user, $db_pass, $db_name);
 	echo "<h1>Step 2</h1>\n";
 	echo "<p>Radiopanel will now attempt to connect to the database and perform initial setup</p>";
 	do {
@@ -147,13 +140,7 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 	do {
 		// Connect to database using config file we just set up.
 		include("config.php");
-		$db_config = array(	
-			'host'      => $db_host,
-			'username'  => $db_user,
-			'database'  => $db_name,
-			'password'  => $db_pass	
-		);
-		$db_session = new Database($db_config);
+		$db_session = new mysqli($db_host, $db_user, $db_pass, $db_name);
 		$db_session->connect();
 		// Promot for new admin user account.
 		echo "<p>Database has now been set up successfully. Please create an admin user account.</p>";
@@ -174,13 +161,7 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 	echo "<h1>Step 4</h1>";
 	do {
 		include("config.php");
-		$db_config = array(	
-			'host'      => $db_host,
-			'username'  => $db_user,
-			'database'  => $db_name,
-			'password'  => $db_pass	
-		);
-		$db_session = new Database($db_config);
+		$db_session = new mysqli($db_host, $db_user, $db_pass, $db_name);
 		if(!$db_session->connect()) {
 			echo "<p class=\"error\">Error: Unable to connect to database. Incorrect details were provided or MySQL server does not exist</p>";
 			break;
