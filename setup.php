@@ -5,6 +5,7 @@
 // This file must be deleted once run (or if manual setup has been completed);
 
 include("inc/class.user.php");
+error_reporting(E_ALL ^ E_NOTICE);
 
 ?>
 <!DOCTYPE html>
@@ -83,11 +84,12 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 1)) {
 	do {
 		// Initial connect
 		echo "<p>Connecting to database $db_host</p>";
-		if(!$db_session->connect()) {
+		if($db_session->connect_error) {
 			echo "<p class=\"error\">Error: Unable to connect to database. Incorrect details were provided or MySQL server does not exist</p>";
+			echo "<p>Error: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error . ")</p>";
 			break;
 		}
-		echo "<p>Connected</p>";
+		echo "<p>Connected - " . $db_session->host_info . "</p>";
 		// If creating database, create
 		if(isset($_POST['db_create'])) {
 			echo "<p>Creating database: CREATE DATABASE `radiopanel`</p>";
@@ -138,10 +140,6 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 1)) {
 else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 	echo "<h1>Step 3</h1>";
 	do {
-		// Connect to database using config file we just set up.
-		include("config.php");
-		$db_session = new mysqli($db_host, $db_user, $db_pass, $db_name);
-		$db_session->connect();
 		// Promot for new admin user account.
 		echo "<p>Database has now been set up successfully. Please create an admin user account.</p>";
 		echo "<h2>Account setup</h2>";
@@ -162,8 +160,9 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 	do {
 		include("config.php");
 		$db_session = new mysqli($db_host, $db_user, $db_pass, $db_name);
-		if(!$db_session->connect()) {
-			echo "<p class=\"error\">Error: Unable to connect to database. Incorrect details were provided or MySQL server does not exist</p>";
+		if($db_session->connect_error) {
+			echo "<p class=\"error\">Error: Unable to connect to database.</p>";
+			echo "<p>Error: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error . ")</p>";
 			break;
 		}
 		// Add user account to database
@@ -185,12 +184,12 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 		// Promot user to set up cron job and delete this file.
 		echo "<h2>Cron Job</h2>";
 		echo "<p>For RadioPanel to work, you will need to setup a cron job (or scheduled task) to run periodically.<br />We recommend that the cron job is run every minute, but you may want to run less frequently.</p>";
-		echo "<p>Setup cannot set this up, you need to do this manually. See the example commands below</p>";
+		echo "<p>Setup cannot set this up, you need to do this manually. Open up the crontab editor and use the cron below</p>";
 		echo "<br /><p class=\"code\">crontab -e<br /><br />* * * * * php ".$_SERVER['DOCUMENT_ROOT']."/index.php cron_stream</p>";
 		echo "<p>If you cannot run the cron job on the same server, you can do this from a remote server by calling the URL ".$_SERVER['SERVER_NAME']."/index.php?task=cron_stream.</p><br />";
 		
 		echo "<h2>Delete setup file</h2>";
-		echo "<p>Before you can use RadioPanel, you will need to delete this setup file. Click 'Finish' below to delete the file and be taken to the RadioPanel homepage</p>";
+		echo "<p>Before you can use RadioPanel, you MUST delete this setup file. RadioPanel will not work unless you do this, and this setup file is a huge security risk if left unattended. Click 'Finish' below to attempt to delete the file and be taken to the RadioPanel homepage</p>";
 		echo "<form name=\"setup\" action=\"./setup.php\" method=\"post\"><input name=\"setup\" type=\"hidden\" value=\"5\"><input type=\"submit\" name=\"submit\" value=\"Finish\"></form>";
 	} while(0);
 } else if(isset($_POST['submit']) && ($_POST['setup'] == 5)) {
@@ -198,7 +197,7 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 2)) {
 	do {
 		if(!unlink("setup.php")) {
 			echo "<p class=\"error\">Error: Unable to delete setup.php. Please remove the setup.php file manually.</p>";
-			echo "<a href=\"".$_SERVER['SERVER_NAME']."\">Click here to go to RadioPanel home</a>";
+			echo "<a href=\"./\">Once you have deleted this fie, click here to go to RadioPanel home</a>";
 		} else {
 			echo "<p>Redirecting...</p>";
 			echo "<script type=\"text/javascript\">window.location.replace(\"./\");</script><noscript><a href=\"./\">Click here</a></noscript>";
