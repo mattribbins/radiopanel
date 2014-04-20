@@ -67,7 +67,7 @@ if(isset($_POST['submit']) && ($_POST['setup'] == 0)) {
 	echo "<tr><td>Database Name</td><td><input name=\"db_name\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
 	echo "<tr><td>Database Username</td><td><input name=\"db_user\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
 	echo "<tr><td>Database Password</td><td><input name=\"db_pass\" type=\"text\" maxlength=\"254\" size=\"40\" value=\"\"></td></tr>";
-	//echo "<tr><td>Create database</td><td><input name=\"db_create\" type=\"checkbox\"> <strong>Note:</strong> the next step will fail if the database already exists.</td></tr>";
+	echo "<tr><td>Create database</td><td><input name=\"db_create\" type=\"checkbox\"> <strong>Note:</strong> the next step will fail if the database already exists.</td></tr>";
 	echo "<input name=\"setup\" type=\"hidden\" value=\"1\">";
 	echo "<tr><td></td><td><input type=\"submit\" name=\"submit\" value=\"Submit\"></td></tr>";
 	echo "</table></form>";
@@ -100,32 +100,34 @@ else if(isset($_POST['submit']) && ($_POST['setup'] == 1)) {
 		}
 		// Create tables
 		echo "<p>Creating user table: CREATE TABLE `users`</p>";
-		if(!$db_session->query("CREATE TABLE `users` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, `username` VARCHAR(50) NOT NULL DEFAULT '0', `password` VARCHAR(255) NOT NULL DEFAULT '0', `salt` VARCHAR(127) NOT NULL DEFAULT '0', `email` VARCHAR(127) NOT NULL DEFAULT '0', `access` VARCHAR(2) NOT NULL DEFAULT '0', primary key (`id`)) COMMENT='Holds user accounts' COLLATE='utf8_general_ci' ENGINE=InnoDB;")) {
+		if(!$db_session->query("CREATE TABLE IF NOT EXISTS `users` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, `username` VARCHAR(50) NOT NULL DEFAULT '0', `password` VARCHAR(255) NOT NULL DEFAULT '0', `salt` VARCHAR(127) NOT NULL DEFAULT '0', `email` VARCHAR(127) NOT NULL DEFAULT '0', `access` VARCHAR(2) NOT NULL DEFAULT '0', primary key (`id`)) COMMENT='Holds user accounts' COLLATE='utf8_general_ci' ENGINE=InnoDB;")) {
 			echo "<p class=\"error\">Error: Unable to create table users</p>";
 			break;
 		}
 		echo "<p>Creating stream table: CREATE TABLE `streams`</p>";
-		if(!$db_session->query("CREATE TABLE `streams` (`sid` SMALLINT UNSIGNED NULL AUTO_INCREMENT, `name` VARCHAR(64) NULL DEFAULT '0', `server` VARCHAR(256) NULL DEFAULT '0', `username` VARCHAR(64) NULL DEFAULT '0', `password` VARCHAR(64) NULL DEFAULT '0', `mountpoint` VARCHAR(64) NULL DEFAULT '0', `active` TINYINT UNSIGNED NULL DEFAULT '0', PRIMARY KEY (`sid`)) COMMENT='Holds the list of streams' COLLATE='utf8_general_ci' ENGINE=InnoDB;")) {
+		if(!$db_session->query("CREATE TABLE IF NOT EXISTS `streams` (`sid` SMALLINT UNSIGNED NULL AUTO_INCREMENT, `name` VARCHAR(64) NULL DEFAULT '0', `server` VARCHAR(256) NULL DEFAULT '0', `username` VARCHAR(64) NULL DEFAULT '0', `password` VARCHAR(64) NULL DEFAULT '0', `mountpoint` VARCHAR(64) NULL DEFAULT '0', `active` TINYINT UNSIGNED NULL DEFAULT '0', PRIMARY KEY (`sid`)) COMMENT='Holds the list of streams' COLLATE='utf8_general_ci' ENGINE=InnoDB;")) {
 			echo "<p class=\"error\">Error: Unable to create table streams</p>";
 			break;	
 		}
 		echo "<p>Creating figures table: CREATE TABLE `figures`</p>"; 
-		if(!$db_session->query("CREATE TABLE `figures` (`fid` INT(16) UNSIGNED NULL AUTO_INCREMENT, `timestamp`  INT(10) UNSIGNED NULL DEFAULT NULL, `listeners` MEDIUMINT UNSIGNED NULL, PRIMARY KEY (`fid`)) COMMENT='Holds total listener figures' COLLATE='utf8_general_ci' ENGINE=InnoDB;")) {
+		if(!$db_session->query("CREATE TABLE IF NOT EXISTS `figures` (`fid` INT(16) UNSIGNED NULL AUTO_INCREMENT, `timestamp`  INT(10) UNSIGNED NULL DEFAULT NULL, `listeners` MEDIUMINT UNSIGNED NULL, PRIMARY KEY (`fid`)) COMMENT='Holds total listener figures' COLLATE='utf8_general_ci' ENGINE=InnoDB;")) {
 			echo "<p class=\"error\">Error: Unable to create table figures</p>";
 		}
 		
 		echo "<p>Creating clients table: CREATE TABLE `clients`</p>";
-		if(!$db_session->query("CREATE TABLE IF NOT EXISTS `clients` (`cid` int(10) NOT NULL AUTO_INCREMENT, `iceid` int(12) NOT NULL, `sid` int(10) NOT NULL, `server` varchar(15) NOT NULL, `mount` varchar(80) NOT NULL, `agent` varchar(255) NOT NULL, `referrer` varchar(512) DEFAULT NULL, `ip` varchar(20) NOT NULL, `city` varchar(30) DEFAULT NULL, `country` varchar(20) DEFAULT NULL, `duration` int(11) DEFAULT NULL, `datetime_start` datetime NOT NULL, `datetime_end` datetime DEFAULT NULL, PRIMARY KEY (`cid`), UNIQUE KEY `cid` (`cid`) ENGINE=InnoDB;")) {
-			echo "<p class=\"error\">Error: Unable to create table streams</p>";
+		if(!$db_session->query("CREATE TABLE IF NOT EXISTS `clients` (`cid` int(10) NOT NULL AUTO_INCREMENT, `iceid` int(12) NOT NULL, `sid` int(10) NOT NULL, `server` varchar(15) NOT NULL, `mount` varchar(80) NOT NULL, `agent` varchar(255) NOT NULL, `referrer` varchar(512) DEFAULT NULL, `ip` varchar(20) NOT NULL, `city` varchar(30) DEFAULT NULL, `country` varchar(20) DEFAULT NULL, `duration` int(11) DEFAULT NULL, `datetime_start` datetime NOT NULL, `datetime_end` datetime DEFAULT NULL, PRIMARY KEY (`cid`), UNIQUE KEY `cid` (`cid`)) COLLATE='utf8_general_ci' ENGINE=InnoDB;")) {
+			echo "<p class=\"error\">Error: Unable to create table clients</p>";
 			break;	
 		}
 		echo "<p>Creating settings table: CREATE TABLE `settings`</p>";
-		if(!$db_session->query("CREATE TABLE IF NOT EXISTS `settings` (`setting` varchar(50) NOT NULL, `value` varchar(100) NOT NULL, UNIQUE KEY `setting` (`setting`)) ENGINE=InnoDB; INSERT INTO `radiopanel_test`.`settings` (`setting`, `value`) VALUES ('ver', '1.1.0.1');")) {
-			echo "<p class=\"error\">Error: Unable to create table streams</p>";
+		if(!$db_session->query("CREATE TABLE IF NOT EXISTS `settings` (`setting` varchar(50) NOT NULL, `value` varchar(100) NOT NULL, UNIQUE KEY `setting` (`setting`)) COLLATE='utf8_general_ci' ENGINE=InnoDB;")) {
+			echo "<p class=\"error\">Error: Unable to create table settings</p>";
 			break;	
 		}
-		
-		
+		if(!$db_session->query("INSERT INTO `settings` (`setting`, `value`) VALUES ('ver', '1.1.0.1');")) {
+			echo "<p class=\"error\">Error: Unable to populate settings</p>";
+			break;	
+		}	
 		
 
 		// Setup config.php
