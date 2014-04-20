@@ -1,7 +1,7 @@
-RadioPlayer
+RadioPanel Icecast Stats
 ===========
 by Matt Ribbins (mattyribbo.co.uk)
-Current release: 1.0a2
+Current release: 1.1.0.1
 
 Requirements
 ------------
@@ -9,6 +9,10 @@ Requirements
  * MySQL Server
  * Icecast2 Server(s)
  * Ability to run cron jobs either on the same server or remotely.
+ 
+What's new in 1.1?
+------------------
+With 1.1, I'm making advantage of the information that Icecast can provide through client connect and disconnect hooks. 
 
 What?
 -----
@@ -44,5 +48,5 @@ To-do
 - General improvements
 - Support for ShoutCast server
 - More fluid user interface with jQuery UI
-- Mobile interface
+- Mobile interface (done, now has a responsive design)
 - Documentation (phpDocumentor may prove useful)
