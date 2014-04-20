@@ -39,6 +39,32 @@ COMMENT='Holds the list of streams'
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS `clients` (
+  `cid` int(10) NOT NULL AUTO_INCREMENT,
+  `iceid` int(12) NOT NULL,
+  `sid` int(10) NOT NULL,
+  `server` varchar(15) NOT NULL,
+  `mount` varchar(80) NOT NULL,
+  `agent` varchar(255) NOT NULL,
+  `referrer` varchar(512) DEFAULT NULL,
+  `ip` varchar(20) NOT NULL,
+  `city` varchar(30) DEFAULT NULL,
+  `country` varchar(20) DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
+  `datetime_start` datetime NOT NULL,
+  `datetime_end` datetime DEFAULT NULL,
+  PRIMARY KEY (`cid`),
+  UNIQUE KEY `cid` (`cid`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `settings` (
+  `setting` varchar(50) NOT NULL,
+  `value` varchar(100) NOT NULL,
+  UNIQUE KEY `setting` (`setting`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `radiopanel_test`.`settings` (`setting`, `value`) VALUES ('ver', '1.1.0.1');
+
 -- Admin user account
 -- Username: admin 
 -- Password: password

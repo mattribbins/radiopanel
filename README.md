@@ -14,9 +14,15 @@ What's new in 1.1?
 ------------------
 With 1.1, I'm making advantage of the information that Icecast can provide through client connect and disconnect hooks. 
 
-What?
+Upgrading from 1.0 to 1.1
+-------------------------
+If you are upgrading from 1.0 to 1.1, please run upgrade.php since there are database changes! This will be a one-time process, any future updates to the database will not need upgrade.php (hopefully). 
+
+
+
+What is RadioPanel?
 -----
-RadioPanel is a panel used for recording listener figures and displays them either in an hourly overview or week overview format. Originally created for [Hub Radio](http://www.hubradio.co.uk)
+RadioPanel is a panel used for recording and reviewing listener statistics. Originally created for use in [Hub Radio](http://www.hubradio.co.uk)
 
 Installation
 ------------
@@ -24,11 +30,13 @@ Download RadioPanel to your PHP enabled webserver. Run setup.php from your web b
 
 Warning
 -------
-RadioPanel is pretty much in it's alpha stages. I don't recommend at this point putting this into production unless you're willing to update regularly or perhaps make SQL adjustments.
+RadioPanel is pretty much a work in progress. Expect things to change, things to break, things to not work on unique setups. If you do find any bugs and fix them, please share!
  
 Help!
 -----
-If you're stuck getting this working or notice something drastically wrong, you're welcome to email me. matt@mattyribbo.co.uk
+If you're stuck getting RadioPanel working or notice something drastically wrong, you're welcome to email or tweet me. 
+Email matt@mattyribbo.co.uk or tweet @mattyribbo
+I do aim to respond as quickly as I can. If I respond but don't hear back from me and still have a problem, do continue to poke me.
 
 Note
 ----
@@ -44,9 +52,6 @@ The goal for RadioPanel was to be able to log combined listener figures from mul
 
 To-do
 -----
-- Check into GitHub (done!)
 - General improvements
 - Support for ShoutCast server
-- More fluid user interface with jQuery UI
-- Mobile interface (done, now has a responsive design)
 - Documentation (phpDocumentor may prove useful)
