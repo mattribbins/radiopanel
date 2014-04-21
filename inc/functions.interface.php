@@ -26,17 +26,19 @@ function display_head($title,$redirect="") {
     <link href="style.css" rel="stylesheet" type="text/css" />
     <link href="lib/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="lib/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
-    <link href="lib/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" type="text/css" />
+    <link href="lib/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+    <link href="lib/jquery-ui-1.10.3.theme.css" rel="stylesheet" type="text/css" />
+    <!--[if lt IE]><link href="lib/jquery.ui.1.10.3.ie.css" rel="stylesheet" type="text/css" /><![endif-->
     <link href="lib/jquery.jqplot.min.css" rel="stylesheet" type="text/css" />
     <link href=\"lib/jquery.ui.timepicker.css" rel="stylesheet" type="text/css" />
 
 
     <title>RadioPanel - <?php echo $title; ?></title>
-    <script src="lib/jquery-1.8.3.min.js"></script>
-    <script src="lib/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="lib/jquery-2.1.0.min.js"></script>
+    <script src="lib/jquery-ui-1.10.4.min.js"></script>
     <script src="lib/bootstrap.min.js"></script>
     <!--[if lt IE 9]><script language=\"javascript\" type=\"text/javascript\" src=\"lib/excanvas.js\"></script><![endif]-->
-	<script type="text/javascript" src="lib/jquery.jqplot.min.js"></script>;
+	<script type="text/javascript" src="lib/jquery.jqplot.min.js"></script>
 	<script type="text/javascript" src="lib/plugins/jqplot.highlighter.min.js"></script>
 	<script type="text/javascript" src="lib/plugins/jqplot.cursor.min.js"></script>
 	<script type="text/javascript" src="lib/plugins/jqplot.dateAxisRenderer.min.js"></script>
