@@ -13,12 +13,15 @@ Requirements
 What's new in 1.1?
 ------------------
 With 1.1, I'm making advantage of the information that Icecast can provide through client connect and disconnect hooks. 
+<<<<<<< HEAD
 
 Upgrading from 1.0 to 1.1
 -------------------------
 If you are upgrading from 1.0 to 1.1, please run upgrade.php since there are database changes! This will be a one-time process, any future updates to the database will not need upgrade.php (hopefully). 
 
 
+=======
+>>>>>>> 5549305339849f0b8447c1870a828440b8f97a15
 
 What is RadioPanel?
 -----
@@ -54,4 +57,9 @@ To-do
 -----
 - General improvements
 - Support for ShoutCast server
+<<<<<<< HEAD
+=======
+- More fluid user interface with jQuery UI
+- Mobile interface (done, now has a responsive design)
+>>>>>>> 5549305339849f0b8447c1870a828440b8f97a15
 - Documentation (phpDocumentor may prove useful)
