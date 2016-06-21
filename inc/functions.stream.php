@@ -13,8 +13,8 @@
 // Stream Interface
 function stream_interface() {
 	global $user_session;
-	$task = ($_GET['task']);
-	$sid = ($_GET['sid']);
+	if(isset($_GET['task'])) { $task = ($_GET['task']); } else { $task = ""; }
+	if(isset($_GET['sid'])) { $sid = ($_GET['sid']); } else { $sid = 0; }
 	
 	display_head("Stream Management");
 	display_header("Stream Management");

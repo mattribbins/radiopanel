@@ -5,8 +5,8 @@
 
 function user_interface() {
 	global $user_session;
-	$task = ($_GET['task']);
-	$uid = ($_GET['uid']);
+	if(isset($_GET['task'])) { $task = ($_GET['task']); } else { $task = ""; }
+	if(isset($_GET['sid'])) { $sid = ($_GET['sid']); } else { $sid = 0; }
 	
 	display_head("User Management");
 	display_header("User Management");

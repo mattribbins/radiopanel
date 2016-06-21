@@ -21,7 +21,7 @@ require("inc/class.stream.php");
 require("inc/class.user.php");
 
 // Defines
-define('_VER', '1.0b3');
+define('_VER', '1.0.4');
 //error_reporting(E_ALL ^ E_NOTICE);
 
 // Initialisation
@@ -82,6 +82,9 @@ if($user_session->isLoggedIn()) {
 		case "credits":
 			display_credits();
 			break;
+    case "popup":
+      display_live_popup();
+      break;
 		default:
 			display_homepage();
 			break;

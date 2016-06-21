@@ -4,6 +4,7 @@
 // 
 // - stats_week()   - View statistics/figures per week
 // - stats_search() - Search statistics/figures by hour/time period
+// - stats_search_display() - Display search results
 
 function stats_week() {
 	global $db_session;
@@ -219,10 +220,13 @@ function stats_search() {
 	global $db_session;
 	display_head("Search");
 	display_header("Search");
+  
+  $date = NULL;
+  $hour = NULL;
 
-	$date = $_GET['date'];
+	if(isset($_GET['date'])) $date = $_GET['date'];
 	if(isset($_GET['todate'])) { $todate = $_GET['todate']; } else { $todate = $date; }
-	$hour = $_GET['time'];
+	if(isset($_GET['time'])) $hour = $_GET['time'];
 	if(isset($_GET['totime'])) { $tohour = $_GET['totime']; } else { $tohour = $hour+1; }
 	stats_search_display();
 		
@@ -304,7 +308,7 @@ function stats_search_display() {
 					$peak = $listeners[$timestamp];
 				}
 			}
-			$average = round($total/$plots);
+			if($plots > 0) { $average = round($total/$plots); } else { $average = 0; }
 			// Generate jqGraph
 			echo "<div class=\"search_chart_figures\" id=\"chart_figures_search\"></div>\n";
 			echo "<script type=\"text/javascript\">\n";
@@ -327,4 +331,5 @@ function stats_search_display() {
 		echo "<hr />\n";
 	}
 }
+
 ?>

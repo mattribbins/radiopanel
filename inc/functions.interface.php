@@ -113,8 +113,24 @@ function display_footer() {
 <div id="footer">
     <div class="container">
     	<!-- Don't remove the link back. Or you can feel guilty. Your choice. -->
-   		<p class="text-muted">Powered by RadioPanel<?php echo _VER; ?> &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;<a href="http://www.mattyribbo.co.uk/radiopanel">mattyribbo.co.uk</a>&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;<a href="./?page=credits">Credits</a></p>
+   		<p class="text-muted">Powered by RadioPanel <?php echo _VER; ?> &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
+      <a href="https://github.com/mattyribbo/radiopanel/" target="_blank">Fork me on GitHub</a>&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
+      <a href="http://www.mattyribbo.co.uk/radiopanel" target="_blank">mattyribbo.co.uk</a>&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
+      <a href="./?page=credits">Credits</a></p>
     </div>
+</div>
+
+</body>
+</html>
+	
+	<?php
+}
+
+function display_footer_lite() {
+?>
+    
+    </div>
+
 </div>
 
 </body>
@@ -144,7 +160,7 @@ function display_homepage() {
 	echo "<div id=\"streamstats\">";
 	stream_getlivestats();
 	echo "</div><br />";
-	echo "<p style=\"font-style:italic;\">Note: figures are live and will automatically update<br />Do <strong>not</strong> disclose live figures on-air under any circumstances!</p><br /><a href=\"#\" id=\"dialog_link\"  class=\"ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"><span class=\"ui-icon ui-icon-newwin\"></span>Open live stats in a popup window</a>\n";
+	echo "<p style=\"font-style:italic;\">Note: figures are live and will automatically update.</p><br /><a href=\"#\" id=\"dialog_link\" target=\"popup\" onclick=\"window.open('/.?page=popup','Live Stats','width=600,height=300'); return false;\" class=\"ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"><span class=\"ui-icon ui-icon-newwin\"></span>Open live stats in a popup window</a>\n";
 	display_footer();
 }
 
@@ -166,4 +182,13 @@ function display_credits() {
     <?php
 	display_footer();
 }
+
+function display_live_popup() {
+	display_head("Live Stats");
+	echo "<div id=\"streamstats\">";
+	stream_getlivestats();
+	echo "</div>";
+	display_footer_lite();
+} 
+
 ?>
