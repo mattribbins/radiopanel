@@ -28,7 +28,6 @@ function display_head($title,$redirect="") {
     <link href="lib/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="lib/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" type="text/css" />
     <link href="lib/jquery.jqplot.min.css" rel="stylesheet" type="text/css" />
-    <link href=\"lib/jquery.ui.timepicker.css" rel="stylesheet" type="text/css" />
 
 
     <title>RadioPanel - <?php echo $title; ?></title>
