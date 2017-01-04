@@ -6,9 +6,9 @@
 // Refer to the ReadMe file (readme.txt) for installation instructions.
 
 
-// Includes 
+// Includes
 if(!file_exists("config.php")) {
-	die("Critical Error: No configuration found, <a href=\"./setup.php\">please run setup.</a>");	
+	die("Critical Error: No configuration found, <a href=\"./setup.php\">please run setup.</a>");
 }
 require("config.php");
 require("inc/init.php");
@@ -21,7 +21,7 @@ require("inc/class.stream.php");
 require("inc/class.user.php");
 
 // Defines
-define('_VER', '1.0.4');
+define('_VER', '1.0.5.0');
 //error_reporting(E_ALL ^ E_NOTICE);
 
 // Initialisation
@@ -30,6 +30,8 @@ session_start();
 $db_session = new mysqli($db_host, $db_user, $db_pass, $db_name);
 $user_session = new UserService($db_session);
 $user_session->init();
+
+init($db_session);
 
 // Check if we're a web page or using the cli (i.e. for cron)
 if ((isset($_GET['page']) && ($_GET['page']) != "")) {
@@ -69,7 +71,7 @@ if($user_session->isLoggedIn()) {
 		case "streams":
 			if($user_session->getUserAccess() >= 30) {
 				stream_interface();
-				break;	
+				break;
 			}
 		case "users":
 			if($user_session->getUserAccess() >= 40) {

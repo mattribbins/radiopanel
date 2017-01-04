@@ -1,7 +1,7 @@
 <?php
 // RadioPanel - Interface
 // (C) Matt Ribbins - matt@mattyribbo.co.uk
-// 
+//
 // - display_head()       - Displays head (<head>) and starts main div
 // - display_header()     - Displays header (<header>)
 // - display_navigation() - Displays navigation
@@ -18,7 +18,7 @@ function display_head($title,$redirect="") {
     <meta http-equiv="Content-Type" content="text/html charset=utf-8" />
     <?php
     if($redirect) {
-		echo "<meta http-equiv=\"refresh\" content=\"1;url=$redirect\">"; 
+		echo "<meta http-equiv=\"refresh\" content=\"1;url=$redirect\">";
 	}
 	?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +35,7 @@ function display_head($title,$redirect="") {
     <script src="lib/jquery-ui-1.9.2.custom.min.js"></script>
     <script src="lib/bootstrap.min.js"></script>
     <!--[if lt IE 9]><script language=\"javascript\" type=\"text/javascript\" src=\"lib/excanvas.js\"></script><![endif]-->
-	<script type="text/javascript" src="lib/jquery.jqplot.min.js"></script>;
+	<script type="text/javascript" src="lib/jquery.jqplot.min.js"></script>
 	<script type="text/javascript" src="lib/plugins/jqplot.highlighter.min.js"></script>
 	<script type="text/javascript" src="lib/plugins/jqplot.cursor.min.js"></script>
 	<script type="text/javascript" src="lib/plugins/jqplot.dateAxisRenderer.min.js"></script>
@@ -47,11 +47,11 @@ function display_head($title,$redirect="") {
 <div id="wrap">
 <?php
 }
-	
+
 function display_header($title) {
 	global $user_session;
 	$access = $user_session->getUserAccess();
-	
+
 	?>
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -70,15 +70,15 @@ function display_header($title) {
 		</div><!--/.nav-collapse -->
 	</div>
 </div>
-    
+
 <div class="container">
 
 	<?php
 }
-	
+
 function display_navigation($access = 0) {
 	global $user_session;
-	
+
 	echo "<ul class=\"nav navbar-nav\">";
 	echo "<li><a href=\"./\">Home</a></li>";
 	if($access) {
@@ -91,7 +91,7 @@ function display_navigation($access = 0) {
 			echo "<li><a href=\"./?page=stats\">Stats</a></li>";
 		}
 		if($access >= 30) {
-			echo "<li><a href=\"./?page=streams\">Streams</a></li>";	
+			echo "<li><a href=\"./?page=streams\">Streams</a></li>";
 		}
 		if($access >= 40) {
 			echo "<li><a href=\"./?page=users\">Users</a></li>";
@@ -102,10 +102,10 @@ function display_navigation($access = 0) {
 	}
 	echo "</ul>\n";
 }
-	
+
 function display_footer() {
 	?>
-    
+
     </div>
 
 </div>
@@ -121,25 +121,25 @@ function display_footer() {
 
 </body>
 </html>
-	
+
 	<?php
 }
 
 function display_footer_lite() {
 ?>
-    
+
     </div>
 
 </div>
 
 </body>
 </html>
-	
+
 	<?php
 }
 
 function display_loginbox() {
-	?> 
+	?>
     <form class="form-signin" action="index.php?page=login" method="post">
     <h2 class="form-signin-heading">Please sign in</h2>
 	<input name="username" maxlength="32" value="" type="text" placeholder="Username" class="form-control" reqired autofocus>
@@ -188,6 +188,6 @@ function display_live_popup() {
 	stream_getlivestats();
 	echo "</div>";
 	display_footer_lite();
-} 
+}
 
 ?>

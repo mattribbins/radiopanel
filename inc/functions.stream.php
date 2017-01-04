@@ -1,7 +1,7 @@
 <?php
 // RadioPanel -  Stream Functions
 // (C) Matt Ribbins - matt@mattyribbo.co.uk
-// 
+//
 // - stream_interface()    - Web interface and task selector
 // - stream_recordcron()   - Cron API call, logs listener figures from active streams to the database
 // - stream_livestats()    - Display live listener figures
@@ -15,7 +15,7 @@ function stream_interface() {
 	global $user_session;
 	if(isset($_GET['task'])) { $task = ($_GET['task']); } else { $task = ""; }
 	if(isset($_GET['sid'])) { $sid = ($_GET['sid']); } else { $sid = 0; }
-	
+
 	display_head("Stream Management");
 	display_header("Stream Management");
 	switch($task) {
@@ -39,13 +39,13 @@ function stream_recordcron() {
 	$total = 0;
 	$time = time();
 	echo $time;
-	
+
 	// Get live figures
 	$result = $db_session->query("SELECT * FROM `streams` WHERE `active`='1';");
 	if($result) {
 		// Each server post details along with edit buttons.
 		while($server = mysqli_fetch_array($result)) {
-			$stream = new Stream($server['server'], $server['username'], $server['password'], $server['mountpoint']);
+			$stream = new StreamHandler($server['server'], $server['username'], $server['password'], $server['mountpoint'], $server['type']);
 			if($stream->isLive()) {
 				$temp = $stream->getCurrentListenersCount();
 				$total += $temp;
@@ -53,13 +53,13 @@ function stream_recordcron() {
 		}
 	}
 	if(!$result) {
-		echo "Error: No active streams running.";	
+		echo "Error: No active streams running.";
 	}
-	
+
 	// Save into database
 	$result = $db_session->query("INSERT INTO `figures` (`timestamp`, `listeners`) VALUES ('$time', '$total');");
 	if(!$result) {
-		echo "Error: Unable to save into database!";	
+		echo "Error: Unable to save into database!";
 	}
 }
 
@@ -76,12 +76,12 @@ function stream_livestats() {
 function stream_getlivestats() {
 	global $db_session;
 	$total = 0;
-	
+
 	$result = $db_session->query("SELECT * FROM `streams` WHERE `active`='1';");
 	if($result) {
 		// Each server post details along with edit buttons.
 		while($server = mysqli_fetch_array($result)) {
-			$stream = new Stream($server['server'], $server['username'], $server['password'], $server['mountpoint']);
+			$stream = new StreamHandler($server['server'], $server['username'], $server['password'], $server['mountpoint'], $server['type']);
 			if($stream->isLive()) {
 				$temp = $stream->getCurrentListenersCount();
 				echo $server['name']." - $temp<br />";
@@ -101,19 +101,21 @@ function stream_list() {
 	if($result) {
 		// Each server post details along with edit buttons.
 		while($server = mysqli_fetch_array($result)) {
-			$stream = new Stream($server['server'], $server['username'], $server['password'], $server['mountpoint']);
+			$stream = new StreamHandler($server['server'], $server['username'], $server['password'], $server['mountpoint'], $server['type']);
+			$stream->printArray();
+
 			if($stream->isLive()) {
-				$status = "<img src=\"img/bullet_green.png\" title=\"Server Online\" />"; 
+				$status = "<img src=\"img/bullet_green.png\" title=\"Server Online\" />";
 			} else {
-				$status = "<img src=\"img/bullet_red.png\" title=\"Server Offline\" />"; 
+				$status = "<img src=\"img/bullet_red.png\" title=\"Server Offline\" />";
 			}
 
-			if($server['active'] == 1) { 
-				$active = "<img src=\"img/bullet_green.png\" title=\"Server Active\" />"; 
-			} else { 
-				$active = "<img src=\"img/bullet_red.png\" title=\"Server Inactive\" />"; 
+			if($server['active'] == 1) {
+				$active = "<img src=\"img/bullet_green.png\" title=\"Server Active\" />";
+			} else {
+				$active = "<img src=\"img/bullet_red.png\" title=\"Server Inactive\" />";
 			}
-			echo "<tr><td>".$server['sid']."</td><td>".$server['name']."</td><td>".$server['server']."</td><td>".$server['mountpoint']."</td><td>$active</td><td>$status</td><td><a href=\"./?page=streams&task=edit&sid=".$server['sid']."\"><img src=\"img/pencil.png\" title=\"Edit\" alt=\"Edit\" /></a>&nbsp;<a href=\"./?page=streams&task=delete&sid=".$server['sid']."\"><img src=\"img/delete.png\" title=\"Remove\" alt=\"Remove\" /></a></td></tr>\n";	
+			echo "<tr><td>".$server['sid']."</td><td>".$server['name']."</td><td>".$server['server']."</td><td>".$server['mountpoint']."</td><td>$active</td><td>$status</td><td><a href=\"./?page=streams&task=edit&sid=".$server['sid']."\"><img src=\"img/pencil.png\" title=\"Edit\" alt=\"Edit\" /></a>&nbsp;<a href=\"./?page=streams&task=delete&sid=".$server['sid']."\"><img src=\"img/delete.png\" title=\"Remove\" alt=\"Remove\" /></a></td></tr>\n";
 		}
 	}
 	echo "</table>\n";
@@ -127,10 +129,10 @@ function stream_delete($sid) {
 		// We have had a confirmation to delete. Delete!
 		$result = $db_session->query("DELETE from `streams` WHERE sid='$sid';");
 		if($result) {
-			echo "<h3>Deleted.</h3><p>$sid is no more.</p>\n";	
+			echo "<h3>Deleted.</h3><p>$sid is no more.</p>\n";
 		} else {
 			echo "<h3 class=\"error\">Error: Not deleted</h3>\n";
-			echo "<p>For some unknown reason, $sid was not deleted. Sorry about that, you must be disappointed.</p>";	
+			echo "<p>For some unknown reason, $sid was not deleted. Sorry about that, you must be disappointed.</p>";
 		}
 	} else {
 		// Confirm to the user
@@ -139,7 +141,7 @@ function stream_delete($sid) {
 		echo "<form action=\"./?page=streams&task=delete&sid=$sid\" method=\"post\">";
 		echo "<input type=\"hidden\" value=\"$sid\" ><input type=\"submit\" name=\"submit\" value=\"Delete $sid\">";
 		echo "</form>\n";
-			
+
 	}
 }
 function stream_edit($sid) {
@@ -152,29 +154,31 @@ function stream_edit($sid) {
 		$username = $db_session->real_escape_string($_POST['username']);
 		$password = $db_session->real_escape_string($_POST['password']);
 		$mountpoint = $db_session->real_escape_string($_POST['mountpoint']);
+		$type = $db_session->real_escape_string($_POST['type']);
 		if(($_POST['active']) == "on") { $active = TRUE; } else { $active = FALSE; }
 		$sid = $db_session->real_escape_string($_POST['sid']);
-		
-		$result = $db_session->query("UPDATE `streams` SET `name`='$name', `server`='$server', `username`='$username', `password`='$password', `mountpoint`='$mountpoint', `active`='$active' WHERE `sid`='$sid' LIMIT 1;");
+
+		$result = $db_session->query("UPDATE `streams` SET `name`='$name', `server`='$server', `type`='$type', `username`='$username', `password`='$password', `mountpoint`='$mountpoint', `active`='$active' WHERE `sid`='$sid' LIMIT 1;");
 		if($result) {
 			echo "<h3>Update successful.</h3>\n";
 		} else {
-			echo "<h3 class=\"error\">Error: Unable to save details. Changes not saved.</h3>\n";	
+			echo "<h3 class=\"error\">Error: Unable to save details. Changes not saved.</h3>\n";
 		}
-	} 
+	}
 	if(isset($_POST['submit-new']) && isset($_POST['sid-new'])) {
 		$name = $db_session->real_escape_string($_POST['name']);
 		$server = $db_session->real_escape_string($_POST['server']);
 		$username = $db_session->real_escape_string($_POST['username']);
 		$password = $db_session->real_escape_string($_POST['password']);
 		$mountpoint = $db_session->real_escape_string($_POST['mountpoint']);
+		$type = $db_session->real_escape_string($_POST['type']);
 		if(($_POST['active']) == "on") { $active = TRUE; } else { $active = FALSE; }
 		if(!$name || !$server || !$username || !$password || !$mountpoint) {
 			echo "<h3 class=\"error\">Error: A field was left empty.</h3>\n";
 		} else {
-			$result = $db_session->query("INSERT INTO `streams` (`name`, `server`, `username`, `password`, `mountpoint`, `active`) VALUES ('$name', '$server', '$username', '$password', '$mountpoint', '$active');");
+			$result = $db_session->query("INSERT INTO `streams` (`name`, `server`, `type`, `username`, `password`, `mountpoint`, `active`) VALUES ('$name', '$server', '$type', '$username', '$password', '$mountpoint', '$active');");
 			if($result) {
-				echo "<h3>Server added successfully.</h3>\n";	
+				echo "<h3>Server added successfully.</h3>\n";
 			}
 		}
 	}
@@ -188,6 +192,10 @@ function stream_edit($sid) {
 		echo "<form action=\"./?page=streams&task=edit&sid=$sid\" method=\"post\">\n";
 		echo "<div class=\"editstream-1\">Name</div><div class=\"editstream-2-long\"><input name=\"name\" maxlength=\"64\" value=\"".$server['name']."\" type=\"text\"></div>\n";
 		echo "<div class=\"editstream-1\">Server</div><div class=\"editstream-2-long\"><input name=\"server\" maxlength=\"256\" value=\"".$server['server']."\" type=\"text\"></div>\n";
+		echo "<div class=\"editstream-1\">Type</div><div class=\"editstream-2-long\"><select name=\"type\">";
+		echo "<option value=\"1\" "; if($server['type']==1){echo "selected";} echo ">Icecast</option>";
+		echo "<option value=\"3\" "; if($server['type']==3){echo "selected";} echo ">Shoutcast v2</option>";
+		echo "</select></div>\n";
 		echo "<div class=\"editstream-1\">Username</div><div class=\"editstream-2-long\"><input name=\"username\" maxlength=\"64\" value=\"".$server['username']."\" type=\"text\"></div>\n";
 		echo "<div class=\"editstream-1\">Password</div><div class=\"editstream-2-long\"><input name=\"password\" maxlength=\"64\" value=\"".$server['password']."\" type=\"text\"></div>\n";
 		echo "<div class=\"editstream-1\">Mountpoint</div><div class=\"editstream-2-long\"><input name=\"mountpoint\" maxlength=\"64\" value=\"".$server['mountpoint']."\" type=\"text\"></div>\n";
@@ -204,6 +212,10 @@ function stream_edit($sid) {
 		echo "<div class=\"editstream\">\n";
 		echo "<form action=\"./?page=streams&task=edit&sid=$sid\" method=\"post\">";
 		echo "<div class=\"editstream-1\">Name</div><div class=\"editstream-2-long\"><input name=\"name\" maxlength=\"64\" value=\"\" type=\"text\"></div>\n";
+		echo "<div class=\"editstream-1\">Type</div><div class=\"editstream-2-long\"><select name=\"type\">";
+		echo "<option value=\"1\">Icecast</option>";
+		echo "<option value=\"3\">Shoutcast v2</option>";
+		echo "</select></div>\n";
 		echo "<div class=\"editstream-1\">Server</div><div class=\"editstream-2-long\"><input name=\"server\" maxlength=\"256\" value=\"\" type=\"text\"></div>\n";
 		echo "<div class=\"editstream-1\">Username</div><div class=\"editstream-2-long\"><input name=\"username\" maxlength=\"64\" value=\"\" type=\"text\"></div>\n";
 		echo "<div class=\"editstream-1\">Password</div><div class=\"editstream-2-long\"><input name=\"password\" maxlength=\"64\" value=\"\" type=\"text\"></div>\n";
