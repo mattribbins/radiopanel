@@ -1,13 +1,13 @@
 RadioPlayer
 ===========
 by Matt Ribbins (mattyribbo.co.uk)
-Current release: 1.0a2
+Current release: 1.0.5.0
 
 Requirements
 ------------
  * PHP 5.4.x or above
- * MySQL Server
- * Icecast2 Server(s)
+ * MySQL/MariaDB Server
+ * Icecast2 or ShoutCast DNASv2 Server(s)
  * Ability to run cron jobs either on the same server or remotely.
 
 What?
@@ -20,15 +20,14 @@ Download RadioPanel to your PHP enabled webserver. Run setup.php from your web b
 
 Warning
 -------
-RadioPanel is pretty much in it's alpha stages. I don't recommend at this point putting this into production unless you're willing to update regularly or perhaps make SQL adjustments.
- 
+RadioPanel in its current form is very basic. There is much more that could be done to RadioPanel such as more advanced listener metadata, and better displaying of analytics.
+
+RadioPanel was also initially written back in 2012. As such, it is using some deprecated functions and old and INSECURE MySQL functions. Your use of RadioPanel is at your own risk, as mentioned in the licence.
+
 Help!
 -----
-If you're stuck getting this working or notice something drastically wrong, you're welcome to email me. matt@mattyribbo.co.uk
+If you're stuck getting this working or notice something drastically wrong, you're welcome to tweet @mattyribbo or email  matt@mattyribbo.co.uk
 
-Note
-----
-I've not done much PHP for a while, so excuse the rustiness :)
 
 Background
 ----------
@@ -40,9 +39,6 @@ The goal for RadioPanel was to be able to log combined listener figures from mul
 
 To-do
 -----
-- Check into GitHub (done!)
-- General improvements
-- Support for ShoutCast server
-- More fluid user interface with jQuery UI
-- Mobile interface
+- Rewrite!
+- Full screen interface
 - Documentation (phpDocumentor may prove useful)
