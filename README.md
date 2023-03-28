@@ -1,7 +1,11 @@
 RadioPlayer
 ===========
-by Matt Ribbins (mattyribbo.co.uk)
+by Matt Ribbins (mattribbins.co.uk)
 Current release: 1.0.5.0
+
+Important
+---------
+This project is no longer actively maintained and needs a complete overhaul. Feel free to fork but no support or changes will be given.
 
 Requirements
 ------------
@@ -26,7 +30,7 @@ RadioPanel was also initially written back in 2012. As such, it is using some de
 
 Help!
 -----
-If you're stuck getting this working or notice something drastically wrong, you're welcome to tweet @mattyribbo or email  matt@mattyribbo.co.uk
+This project is no longer supported and maintaned.
 
 
 Background
